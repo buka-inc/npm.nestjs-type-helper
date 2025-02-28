@@ -3,7 +3,7 @@ import { EntityProperty, MetadataStorage, ReferenceKind } from '@mikro-orm/core'
 import { isSubclassOf } from '~/utils/is-subclass-of'
 import { BaseEntityReferenceDto } from './base-entity-reference.dto'
 import { ApiScalarEntityProperty } from './api-scalar-entity-property.decorator'
-import { BaseEntity } from './base.entity'
+import { BaseEntity } from './base-entity'
 
 interface ApiEntityPropertyOptions {
   example?: any
