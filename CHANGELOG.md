@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.0](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.1.0...v1.2.0) (2025-02-28)
+
+
+### Features
+
+* add EntityDtoo ([d6dc334](https://github.com/buka-inc/npm.nestjs-type-helper/commit/d6dc334f5561757198bc2df71cc69a4a41b6ef9d))
+
+
+### Bug Fixes
+
+* export IQueryOperator and IFilterQuery types and fix ts type error ([dc5f927](https://github.com/buka-inc/npm.nestjs-type-helper/commit/dc5f927481a1ee4d502fb091cf5172998255d6ba))
+
 ## [1.1.0](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.0.2...v1.1.0) (2025-02-28)
 
 
