@@ -12,14 +12,18 @@ import { getTypeMetadata } from '~/utils/type-decorator-utils'
 import { getApiProperties } from '~/utils/api-property-decortor-utils'
 
 
-type IQueryOperator = '$lt' | '$gt' | '$lte' | '$gte' | '$eq' | '$ne' | '$in' | '$nin'
+export type IQueryOperator = '$lt' | '$gt' | '$lte' | '$gte' | '$eq' | '$ne' | '$in' | '$nin'
 
-type IQueryProperty<T, K extends IQueryOperator = IQueryOperator> = {
+export type IQueryProperty<T, K extends IQueryOperator = IQueryOperator> = {
   [key in K]?: key extends '$in' | '$nin' ? T[] : T
 }
 
-type IFilterQuery<T> = {
-  [K in keyof T]: T[K] extends object ? IFilterQuery<T[K]> : IQueryProperty<Exclude<T[K], undefined>>
+export type IFilterQuery<T> = {
+  [K in keyof T]: K extends string
+    ? T[K] extends object
+      ? IFilterQuery<T[K]>
+      : IQueryProperty<Exclude<T[K], undefined>>
+    : never
 }
 
 
