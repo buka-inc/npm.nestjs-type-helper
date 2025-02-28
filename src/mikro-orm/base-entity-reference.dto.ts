@@ -2,12 +2,15 @@
  * This DTO is used to serialize entity references in the response.
  * When mikroORM serialization.forceObject is set to true.
  */
-
 import { IsNumberString } from 'class-validator'
-import { BaseEntity } from './base.entity.js'
+import { ApiProperty } from '@nestjs/swagger'
 
 
-export class EntityReferenceDto<T extends BaseEntity> {
+export class BaseEntityReferenceDto {
+  @ApiProperty({
+    type: 'string',
+    description: 'PK',
+  })
   @IsNumberString({ no_symbols: true })
-  id!: T['id']
+  id!: string
 }

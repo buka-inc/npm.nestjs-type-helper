@@ -1,21 +1,18 @@
-import { AnyEntity, Dictionary, Enum, EnumOptions } from '@mikro-orm/core'
-import { applyDecorators } from '@nestjs/common'
-import { ApiProperty } from '@nestjs/swagger'
+import { AnyEntity, Enum, EnumOptions } from '@mikro-orm/core'
+import { ColumnTypeRequired } from './column-type-required'
+import { ApiEntityProperty } from './api-entity-property.decorator'
 
 
-export function EntityEnum<T extends object>(options?: (EnumOptions<AnyEntity> & { enumName?: string }) | (() => Dictionary)): PropertyDecorator {
-  const decorators: PropertyDecorator[] = [
-    Enum<T>(options) as PropertyDecorator,
-  ]
+export function EntityEnum<T extends object>(
+  options: EnumOptions<AnyEntity> & ColumnTypeRequired<T> & {
+    example?: any
+    enumName?: string
+  },
+): PropertyDecorator {
+  return (target, propertyKey) => {
+    if (typeof propertyKey !== 'string') throw new TypeError('@EntityEnum() can only be used on string property')
 
-  const e = typeof options === 'function' ? options : options?.items
-  const n = typeof options === 'object' ? options.enumName : undefined
-
-  decorators.push(ApiProperty({
-    enum: e,
-    enumName: n,
-    description: typeof options === 'object' && options?.comment ? options.comment : undefined,
-  }))
-
-  return applyDecorators(...decorators)
+    Enum<T>(options)(target, propertyKey)
+    ApiEntityProperty({ example: options.example, enumName: options.enumName })(target, propertyKey)
+  }
 }
