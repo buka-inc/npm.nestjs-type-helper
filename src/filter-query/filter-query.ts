@@ -9,20 +9,26 @@ import { SchemaObjectMetadata } from '@nestjs/swagger/dist/interfaces/schema-obj
 import { isBuiltInType } from '@nestjs/swagger/dist/utils/is-built-in-type.util'
 import { getTransformMetadata, setTransformMetadata } from '~/utils/transform-decorator-utils'
 import { getTypeMetadata } from '~/utils/type-decorator-utils'
-import { getApiProperties } from '~/utils/api-property-decortor-utils'
+import { getApiProperties } from '~/utils/api-property-decorator-utils'
+import { ExcludeHidden } from '~/types/exclude-hidden'
+import { ExcludeOpt } from '~/types/exclude-opt'
+import { ExcludeRef } from '~/types/exclude-ref'
 
 
 export type IQueryOperator = '$lt' | '$gt' | '$lte' | '$gte' | '$eq' | '$ne' | '$in' | '$nin'
 
-export type IQueryProperty<T, K extends IQueryOperator = IQueryOperator> = {
+export type IQueryScalarValue<T, K extends IQueryOperator = IQueryOperator> = {
   [key in K]?: key extends '$in' | '$nin' ? T[] : T
 }
 
+
+export type IQueryValue<T> = T extends object
+  ? IFilterQuery<T>
+  : IQueryScalarValue<T>
+
 export type IFilterQuery<T> = {
   [K in keyof T]: K extends string
-    ? T[K] extends object
-      ? IFilterQuery<T[K]>
-      : IQueryProperty<Exclude<T[K], undefined>>
+    ? IQueryValue<ExcludeRef<ExcludeOpt<ExcludeHidden<Exclude<T[K], undefined>>>>>
     : never
 }
 

@@ -8,3 +8,5 @@ export * from './entity-one-to-one.decorator.js'
 export * from './entity-many-to-one.decorator.js'
 export * from './entity-many-to-many.decorator.js'
 export * from './entity-one-to-many.decorator.js'
+
+export * from './entity-dto.js'

@@ -40,8 +40,6 @@
     "**/*.ts",
     ".eslintrc.cjs",
     "jest.config.ts",
-    "src/mikro-orm/entity-reference.dto.s",
-    "src/mikro-orm/entity-dto.s"
   ],
   "ts-node": {
     "compilerOptions": {

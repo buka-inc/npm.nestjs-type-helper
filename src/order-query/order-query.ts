@@ -1,6 +1,6 @@
 import { Type } from '@nestjs/common'
 import * as swagger from '@nestjs/swagger'
-import { getApiProperties } from '~/utils/api-property-decortor-utils.js'
+import { getApiProperties } from '~/utils/api-property-decorator-utils.js'
 import * as transformer from 'class-transformer'
 import * as validator from 'class-validator'
 
