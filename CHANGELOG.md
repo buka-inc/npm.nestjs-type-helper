@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.1.0](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.0.2...v1.1.0) (2025-02-28)
+
+
+### Features
+
+* add mutiple entity decorators and enhance MikroORM support ([36cc35a](https://github.com/buka-inc/npm.nestjs-type-helper/commit/36cc35a10e241307e2ca9512e489fab7bd7bd7b8))
+* add OrderQuery decorator ([6e9917f](https://github.com/buka-inc/npm.nestjs-type-helper/commit/6e9917f1838edf0d11573f95c9336eb7ecbec557))
+
+
+### Bug Fixes
+
+* add example to EntityProperty ([2a616bb](https://github.com/buka-inc/npm.nestjs-type-helper/commit/2a616bb5e9e03d4dec41148542578d536c6cc4d2))
+
 ## [1.0.2](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.0.1...v1.0.2) (2025-02-21)
 
 
