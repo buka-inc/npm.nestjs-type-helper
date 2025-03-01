@@ -39,7 +39,7 @@
   "include": [
     "**/*.ts",
     ".eslintrc.cjs",
-    "jest.config.ts",
+    "jest.config.ts"
   ],
   "ts-node": {
     "compilerOptions": {
