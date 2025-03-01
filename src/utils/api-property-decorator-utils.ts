@@ -1,7 +1,6 @@
 import * as R from 'ramda'
 import { ModelPropertiesAccessor } from '@nestjs/swagger/dist/services/model-properties-accessor'
 import { DECORATORS } from '@nestjs/swagger/dist/constants'
-import { isFunction } from '@nestjs/common/utils/shared.utils'
 import { SchemaObjectMetadata } from '@nestjs/swagger/dist/interfaces/schema-object-metadata.interface'
 import { METADATA_FACTORY_NAME } from '@nestjs/swagger/dist/plugin/plugin-constants'
 import { Type } from '@nestjs/common'
@@ -30,7 +29,7 @@ function getSchemaInDecorator(classRef: Type<any>): Record<string, SchemaObjectM
  */
 // eslint-disable-next-line
 function getSchemaInPlugin<T>(classRef: Type<any>): Record<string, SchemaObjectMetadata> {
-  const propsInPlugin = isFunction(classRef[METADATA_FACTORY_NAME]) ? classRef[METADATA_FACTORY_NAME]() : []
+  const propsInPlugin = typeof classRef[METADATA_FACTORY_NAME] === 'function' ? classRef[METADATA_FACTORY_NAME]() : []
   return propsInPlugin
 }
 

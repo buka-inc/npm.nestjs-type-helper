@@ -50,6 +50,7 @@
     "@jest/globals": "^29.7.0",
     "@mikro-orm/core": "^6.4.6",
     "@nestjs/common": "^11.0.7",
+    "@nestjs/mapped-types": "^2.1.0",
     "@nestjs/swagger": "^11.0.3",
     "@nestjs/testing": "^11.0.7",
     "@types/node": "^22.10.0",
@@ -79,6 +80,7 @@
     "@buka/class-transformer-extra": "^2",
     "@mikro-orm/core": "^6",
     "@nestjs/common": "^10 || ^11",
+    "@nestjs/mapped-types": "^2.1.0",
     "@nestjs/swagger": "^10 || ^11",
     "class-transformer": "*",
     "class-validator": "*"

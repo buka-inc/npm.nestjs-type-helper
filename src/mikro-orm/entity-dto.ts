@@ -1,42 +1,29 @@
-import { MetadataStorage, Collection, Ref } from '@mikro-orm/core'
-import { getApiProperties, setApiProperties } from '~/utils/api-property-decorator-utils.js'
+import { EntityProperty, MetadataStorage } from '@mikro-orm/core'
 import { Type } from '@nestjs/common'
-import { copyTransformMetadata } from '~/utils/transform-decorator-utils.js'
-import { copyTypeMetadata } from '~/utils/type-decorator-utils.js'
 import { BaseEntity } from './base-entity'
 import { BaseEntityReferenceDto } from './base-entity-reference.dto'
-import { ExcludeOpt } from '~/types/exclude-opt'
+import { inheritPropertyInitializers, inheritTransformationMetadata, inheritValidationMetadata } from '@nestjs/mapped-types'
+import { EntityDTO as OrmDto } from '@mikro-orm/core'
 
 export type EntityPropertyDto<T> = T extends BaseEntity ? BaseEntityReferenceDto : T
 
 
-export type IEntityDto<T> = {
-  [key in keyof T]: T[key] extends Collection<infer U>
-    ? EntityPropertyDto<U>[]
-    : T[key] extends Ref<infer U>
-      ? EntityPropertyDto<U>
-      : ExcludeOpt<T[key]>
-}
+export function EntityDto<T>(entity: Type<T>): Type<OrmDto<T>> {
+  const meta = MetadataStorage.getMetadataFromDecorator(entity)
 
-function build(targetRef: Type<any>, parentRef: Type<any>): void {
-  const meta = MetadataStorage.getMetadataFromDecorator(parentRef)
-  console.log('MetadataStorage.getMetadataFromDecorator(parentRef): ', meta)
-
-  const classSchema = getApiProperties(parentRef as any)
-
-  setApiProperties(targetRef, classSchema)
-
-  for (const prop in classSchema) {
-    copyTransformMetadata(parentRef as any, targetRef, prop)
-    copyTypeMetadata(parentRef as any, targetRef, prop)
-
-    // MetadataStorage.getMetadataFromDecorator()
+  const isInheritedPredicate = (propertyKey: string): boolean => {
+    const prop = meta.properties[propertyKey] as EntityProperty<T>
+    return prop.hidden !== true
   }
-}
 
-export function EntityDto<T>(entity: Type<T>): Type<IEntityDto<T>> {
-  abstract class EntityDto {}
-  build(EntityDto as any, entity)
+  abstract class EntityDto {
+    constructor() {
+      inheritPropertyInitializers(this, entity, isInheritedPredicate)
+    }
+  }
 
-  return EntityDto as Type<IEntityDto<T>>
+  inheritValidationMetadata(entity, EntityDto, isInheritedPredicate)
+  inheritTransformationMetadata(entity, EntityDto, isInheritedPredicate)
+
+  return EntityDto as Type<OrmDto<T>>
 }
