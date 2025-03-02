@@ -115,3 +115,33 @@ export class BookEntity extends BaseEntity {
 ```
 
 </details>
+
+## DatabaseConfig
+
+Simplify configuration for `MikroORM`(`@buka/nestjs-config` ).
+
+```typescript
+// ./config/postgresql.config.ts
+import * as path from "path";
+import { PostgreSqlDriver } from "@mikro-orm/postgresql";
+import { Configuration } from "@buka/nestjs-config";
+import { DatabaseConfig } from "@buka/nestjs-type-helper";
+
+const srcDir = path.resolve(__dirname, "../");
+
+@Configuration("postgresql")
+export class PostgresqlConfig extends DatabaseConfig {
+  toMikroOrmOptions(): Options {
+    let options = super.toMikroOrmOptions();
+
+    options = {
+      ...options,
+      driver: PostgreSqlDriver,
+      baseDir: srcDir,
+      entities: ["**/*.entity.js"],
+    };
+
+    return options;
+  }
+}
+```

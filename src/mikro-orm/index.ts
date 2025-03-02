@@ -10,3 +10,6 @@ export * from './entity-many-to-many.decorator.js'
 export * from './entity-one-to-many.decorator.js'
 
 export * from './entity-dto.js'
+
+export * from './database.config.js'
+
