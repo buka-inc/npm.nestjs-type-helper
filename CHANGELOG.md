@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.2.0...v1.3.0) (2025-03-02)
+
+
+### Features
+
+* add database configuration for MikroORM ([1e86f2c](https://github.com/buka-inc/npm.nestjs-type-helper/commit/1e86f2cd47582e0fff92364d77c5232053b1e35b))
+
 ## [1.2.0](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.1.0...v1.2.0) (2025-02-28)
 
 
