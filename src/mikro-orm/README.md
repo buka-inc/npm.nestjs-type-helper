@@ -16,6 +16,24 @@ Even if you are not a developer of `Buka Inc`, but use `MikroORM` and `NestJS`, 
 >   // ...other config
 > });
 > ```
+>
+> If use `@nestjs/swagger` CLI Plugin, remove `.entity.ts` from `dtoFileNameSuffix`:
+>
+> ```json
+> {
+>   "compilerOptions": {
+>     "plugins": [
+>       {
+>         "name": "@nestjs/swagger",
+>         "options": {
+>           "introspectComments": true,
+>           "dtoFileNameSuffix": [".dto.ts"]
+>         }
+>       }
+>     ]
+>   }
+> }
+> ```
 
 ## `BaseEntity`
 
