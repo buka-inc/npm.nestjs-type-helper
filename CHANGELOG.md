@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.3.0...v1.3.1) (2025-03-17)
+
+
+### Bug Fixes
+
+* cannot get type of class-transformer ([ee666a8](https://github.com/buka-inc/npm.nestjs-type-helper/commit/ee666a8f10e4e918f486cf9fa0f84e73c12f83bf))
+
 ## [1.3.0](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.2.0...v1.3.0) (2025-03-02)
 
 
