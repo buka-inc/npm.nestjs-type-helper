@@ -13,10 +13,17 @@ export function getTypeMetadata(classRef: Type<any>, prop: any): any | undefined
   const metadataStorage = classTransformer.defaultMetadataStorage
   const metadataMap = metadataStorage['_typeMetadatas']
 
-  const classMetadata = metadataMap.get(classRef)
-  if (!classMetadata) return
+  let parentClassRef = classRef
 
-  return classMetadata.get(prop)
+  while (parentClassRef && parentClassRef !== Object) {
+    const classMetadata = metadataMap.get(parentClassRef)
+    if (classMetadata) {
+      const value = classMetadata.get(prop)
+      if (value) return value
+    }
+
+    parentClassRef = Object.getPrototypeOf(parentClassRef)
+  }
 }
 
 export function setTypeMetadata(classRef: Type<any>, prop: any, metadata: any): void {

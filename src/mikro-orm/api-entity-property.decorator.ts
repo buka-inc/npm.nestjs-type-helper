@@ -4,6 +4,8 @@ import { isSubclassOf } from '~/utils/is-subclass-of'
 import { BaseEntityReferenceDto } from './base-entity-reference.dto'
 import { ApiScalarEntityProperty } from './api-scalar-entity-property.decorator'
 import { BaseEntity } from './base-entity'
+import { Type } from 'class-transformer'
+import { ValidateNested } from 'class-validator'
 
 interface ApiEntityPropertyOptions {
   example?: any
@@ -35,8 +37,19 @@ export function ApiEntityProperty<T extends object>(options?: ApiEntityPropertyO
     }
 
     if (prop.kind === ReferenceKind.ONE_TO_ONE || prop.kind === ReferenceKind.MANY_TO_ONE) {
+      Type(function EntityPropertyType() {
+        const ent = prop.entity()
+        if (typeof ent === 'function' && isSubclassOf(ent, BaseEntity)) {
+          return BaseEntityReferenceDto
+        }
+
+        return Object
+      })(target, propertyKey)
+
+      ValidateNested()(target, propertyKey)
+
       if (prop.lazy !== false && prop.ref !== false) {
-        return ApiProperty({
+        ApiProperty({
           description: prop.comment,
           required: !prop.nullable,
           type: () => {
@@ -48,12 +61,24 @@ export function ApiEntityProperty<T extends object>(options?: ApiEntityPropertyO
             return 'object'
           },
         })(target, propertyKey)
+        return
       }
 
       return
     }
 
     if (prop.kind === ReferenceKind.ONE_TO_MANY || prop.kind === ReferenceKind.MANY_TO_MANY) {
+      Type(function EntityPropertyType() {
+        const ent = prop.entity()
+        if (typeof ent === 'function' && isSubclassOf(ent, BaseEntity)) {
+          return BaseEntityReferenceDto
+        }
+
+        return Object
+      })(target, propertyKey)
+
+      ValidateNested({ each: true })(target, propertyKey)
+
       if (prop.lazy !== false && prop.ref !== false) {
         return ApiProperty({
           type: 'array',
