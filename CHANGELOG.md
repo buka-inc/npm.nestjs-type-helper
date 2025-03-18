@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.2](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.3.1...v1.3.2) (2025-03-18)
+
+
+### Performance Improvements
+
+* enhance EntityDto ([87fa3b1](https://github.com/buka-inc/npm.nestjs-type-helper/commit/87fa3b15b4564608dbefe777f743215e8e9010e9))
+
 ## [1.3.1](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.3.0...v1.3.1) (2025-03-17)
 
 
