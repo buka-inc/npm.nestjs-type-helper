@@ -1,18 +1,40 @@
-import { EntityProperty, MetadataStorage } from '@mikro-orm/core'
+import { EntityMetadata, EntityProperty, EntityRef, Hidden, MetadataStorage, Ref } from '@mikro-orm/core'
 import { Type } from '@nestjs/common'
-import { BaseEntity } from './base-entity'
-import { BaseEntityReferenceDto } from './base-entity-reference.dto'
 import { inheritPropertyInitializers, inheritTransformationMetadata, inheritValidationMetadata } from '@nestjs/mapped-types'
-import { EntityDTO as OrmDto } from '@mikro-orm/core'
-
-export type EntityPropertyDto<T> = T extends BaseEntity ? BaseEntityReferenceDto : T
+import { ExcludeOpt } from '~/types/exclude-opt'
 
 
-export function EntityDto<T>(entity: Type<T>): Type<OrmDto<T>> {
-  const meta = MetadataStorage.getMetadataFromDecorator(entity)
+export type IEntityDto<T> = {
+  [K in keyof T]: T[K] extends (Hidden | symbol)
+    ? never
+    : ExcludeOpt<Exclude<T[K], undefined>> extends Ref<infer U>
+      ? U extends object
+        ? EntityRef<U> | U
+        : U
+      : ExcludeOpt<Exclude<T[K], undefined>>
+}
+
+
+export function EntityDto<T>(entity: Type<T>): Type<IEntityDto<T>> {
+  const metadatas: EntityMetadata<any>[] = []
+
+  let parent: any = entity
+  do {
+    const meta = MetadataStorage.getMetadataFromDecorator(parent)
+    if (meta) metadatas.push(meta)
+    parent = Object.getPrototypeOf(parent)
+  } while (parent && parent !== Object)
+
+  function getMetadata(propertyKey: string): EntityProperty<T> | undefined {
+    for (const meta of metadatas) {
+      const prop = meta.properties[propertyKey] as EntityProperty<T> | undefined
+      if (prop) return prop
+    }
+  }
 
   const isInheritedPredicate = (propertyKey: string): boolean => {
-    const prop = meta.properties[propertyKey] as EntityProperty<T>
+    const prop = getMetadata(propertyKey)
+    if (!prop) return false
     return prop.hidden !== true
   }
 
@@ -25,5 +47,5 @@ export function EntityDto<T>(entity: Type<T>): Type<OrmDto<T>> {
   inheritValidationMetadata(entity, EntityDto, isInheritedPredicate)
   inheritTransformationMetadata(entity, EntityDto, isInheritedPredicate)
 
-  return EntityDto as Type<OrmDto<T>>
+  return EntityDto as Type<IEntityDto<T>>
 }
