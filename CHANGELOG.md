@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.4](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.3.3...v1.3.4) (2025-03-19)
+
+
+### Bug Fixes
+
+* return type of EntityDto missing swagger ([45251e3](https://github.com/buka-inc/npm.nestjs-type-helper/commit/45251e35830079ec5fb21652aa9e1e043f2790a2))
+
 ## [1.3.3](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.3.2...v1.3.3) (2025-03-19)
 
 
