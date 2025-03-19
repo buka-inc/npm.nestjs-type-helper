@@ -44,6 +44,7 @@ export class DatabaseConfig {
       debug: this.debug,
       timezone: this.timezone,
 
+      forceUndefined: true,
       flushMode: FlushMode.COMMIT,
       serialization: {
         forceObject: true,
