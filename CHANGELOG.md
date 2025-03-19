@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.4.0](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.3.4...v1.4.0) (2025-03-19)
+
+
+### Features
+
+* update Page.from to return EntityDTO items ([6de3460](https://github.com/buka-inc/npm.nestjs-type-helper/commit/6de3460a6b1775e158845c4ed8fec24af2f4a78b))
+
+
+### Bug Fixes
+
+* wrong IentityDto type ([3e58fd5](https://github.com/buka-inc/npm.nestjs-type-helper/commit/3e58fd59a8ddce35d2bd9d401d4d3813f4497a5a))
+
+
+### Performance Improvements
+
+* enable forceUndefined option in DatabaseConfig ([915d7ba](https://github.com/buka-inc/npm.nestjs-type-helper/commit/915d7ba0e61dfae44ab4b01d137803cffd908b24))
+
 ## [1.3.4](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.3.3...v1.3.4) (2025-03-19)
 
 
