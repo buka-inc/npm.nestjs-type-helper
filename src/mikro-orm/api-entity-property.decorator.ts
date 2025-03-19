@@ -1,5 +1,5 @@
 import { ApiHideProperty, ApiProperty, getSchemaPath } from '@nestjs/swagger'
-import { EntityProperty, MetadataStorage, ReferenceKind } from '@mikro-orm/core'
+import { EntityName, EntityProperty, MetadataStorage, ReferenceKind } from '@mikro-orm/core'
 import { isSubclassOf } from '~/utils/is-subclass-of'
 import { BaseEntityReferenceDto } from './base-entity-reference.dto'
 import { ApiScalarEntityProperty } from './api-scalar-entity-property.decorator'
@@ -36,61 +36,35 @@ export function ApiEntityProperty<T extends object>(options?: ApiEntityPropertyO
       return
     }
 
-    if (prop.kind === ReferenceKind.ONE_TO_ONE || prop.kind === ReferenceKind.MANY_TO_ONE) {
-      Type(function EntityPropertyType() {
-        const ent = prop.entity()
-        if (typeof ent === 'function' && isSubclassOf(ent, BaseEntity)) {
-          return BaseEntityReferenceDto
-        }
-
-        return Object
-      })(target, propertyKey)
-
-      ValidateNested()(target, propertyKey)
-
-      if (prop.lazy !== false && prop.ref !== false) {
-        ApiProperty({
-          description: prop.comment,
-          required: !prop.nullable,
-          type: () => {
-            const ent = prop.entity()
-            if (typeof ent === 'function' && isSubclassOf(ent, BaseEntity)) {
-              return BaseEntityReferenceDto
-            }
-
-            return 'object'
-          },
-        })(target, propertyKey)
-        return
+    const getEntity = (): EntityName<any> | undefined => {
+      const ent = prop.entity()
+      if (prop.eager === true) return ent
+      if (typeof ent === 'function' && isSubclassOf(ent, BaseEntity)) {
+        return BaseEntityReferenceDto
       }
+    }
+
+    if (prop.kind === ReferenceKind.ONE_TO_ONE || prop.kind === ReferenceKind.MANY_TO_ONE) {
+      Type(() => getEntity() as any || Object)(target, propertyKey)
+      ValidateNested()(target, propertyKey)
+      ApiProperty({
+        description: prop.comment,
+        required: !prop.nullable,
+        type: () => getEntity() || 'object',
+      })(target, propertyKey)
 
       return
     }
 
     if (prop.kind === ReferenceKind.ONE_TO_MANY || prop.kind === ReferenceKind.MANY_TO_MANY) {
-      Type(function EntityPropertyType() {
-        const ent = prop.entity()
-        if (typeof ent === 'function' && isSubclassOf(ent, BaseEntity)) {
-          return BaseEntityReferenceDto
-        }
-
-        return Object
-      })(target, propertyKey)
-
+      Type(() => getEntity() as any || Object)(target, propertyKey)
       ValidateNested({ each: true })(target, propertyKey)
-
-      if (prop.lazy !== false && prop.ref !== false) {
-        return ApiProperty({
-          type: 'array',
-          items: {
-            type: getSchemaPath(() => {
-              const ent = prop.entity()
-              if (typeof ent === 'function' && isSubclassOf(ent, BaseEntity)) return BaseEntityReferenceDto
-              return 'object'
-            }),
-          },
-        })(target, propertyKey)
-      }
+      ApiProperty({
+        type: 'array',
+        items: {
+          type: getSchemaPath(() => getEntity() || 'object'),
+        },
+      })(target, propertyKey)
       return
     }
   }

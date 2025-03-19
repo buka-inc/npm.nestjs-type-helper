@@ -1,11 +1,17 @@
 import * as R from 'ramda'
-import { Collection, EntityMetadata, EntityRef, Hidden, MetadataStorage, Ref } from '@mikro-orm/core'
+import { Collection, EntityMetadata, Hidden, MetadataStorage, Primary, PrimaryProperty, Ref, Scalar } from '@mikro-orm/core'
 import { Type } from '@nestjs/common'
 import { ExcludeOpt } from '~/types/exclude-opt'
 import { PickType } from '@nestjs/swagger'
 
 
-export type IEntityRefPropertyDto<T> = T extends object ? EntityRef<T> | T : T
+export type IEntityRefPropertyDto<T> = T extends Scalar
+  ? T
+  : T extends object
+    ? { [K in keyof T as K extends PrimaryProperty<T> ? K : never]: Primary<T> }
+    : T
+
+
 export type IEntityPropertyDto<T> = T extends Ref<infer U>
   ? IEntityRefPropertyDto<U>
   : T extends Collection<infer U>
@@ -13,9 +19,7 @@ export type IEntityPropertyDto<T> = T extends Ref<infer U>
     : T
 
 export type IEntityDto<T> = {
-  [K in keyof T as T[K] extends (Hidden | symbol) ? never : K]: T[K] extends (Hidden | symbol)
-    ? never
-    : IEntityPropertyDto<ExcludeOpt<T[K]>>
+  [K in keyof T as T[K] extends (Hidden | symbol) ? never : K]: IEntityPropertyDto<ExcludeOpt<T[K]>>
 }
 
 
