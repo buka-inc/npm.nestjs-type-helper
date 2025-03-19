@@ -1,7 +1,7 @@
 import { Opt } from '@mikro-orm/core'
 
-export type ExcludeOpt<T> = T extends infer U & Opt
+export type ExcludeOpt<T> = Exclude<T, undefined> extends infer U & Opt
   ? U
-  : T extends Opt<infer U>
+  : Exclude<T, undefined> extends Opt<infer U>
     ? U
-    : T
+    : Exclude<T, undefined>

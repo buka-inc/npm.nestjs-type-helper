@@ -1,17 +1,20 @@
-import { EntityMetadata, EntityProperty, EntityRef, Hidden, MetadataStorage, Ref } from '@mikro-orm/core'
+import { Collection, EntityMetadata, EntityProperty, EntityRef, Hidden, MetadataStorage, Ref } from '@mikro-orm/core'
 import { Type } from '@nestjs/common'
 import { inheritPropertyInitializers, inheritTransformationMetadata, inheritValidationMetadata } from '@nestjs/mapped-types'
 import { ExcludeOpt } from '~/types/exclude-opt'
 
 
+export type IEntityRefPropertyDto<T> = T extends object ? EntityRef<T> | T : T
+export type IEntityPropertyDto<T> = T extends Ref<infer U>
+  ? IEntityRefPropertyDto<U>
+  : T extends Collection<infer U>
+    ? IEntityRefPropertyDto<U>[]
+    : T
+
 export type IEntityDto<T> = {
   [K in keyof T]: T[K] extends (Hidden | symbol)
     ? never
-    : ExcludeOpt<Exclude<T[K], undefined>> extends Ref<infer U>
-      ? U extends object
-        ? EntityRef<U> | U
-        : U
-      : ExcludeOpt<Exclude<T[K], undefined>>
+    : IEntityPropertyDto<ExcludeOpt<T[K]>>
 }
 
 
