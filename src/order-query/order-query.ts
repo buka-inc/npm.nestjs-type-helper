@@ -1,6 +1,6 @@
 import { Type } from '@nestjs/common'
 import * as swagger from '@nestjs/swagger'
-import { getApiProperties } from '~/utils/api-property-decorator-utils.js'
+import { getMetadata } from '~/utils/nestjs-swagger-utils.js'
 import * as transformer from 'class-transformer'
 import * as validator from 'class-validator'
 
@@ -13,7 +13,7 @@ type IOrderQuery<T> = {
 
 
 function buildClass(targetRef: Type<any>, parentRef: Type<any>): void {
-  const classSchema = getApiProperties(parentRef)
+  const classSchema = getMetadata(parentRef)
 
   abstract class OrderClass {}
 

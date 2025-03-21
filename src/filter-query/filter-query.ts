@@ -5,11 +5,9 @@ import { Type } from '@nestjs/common'
 import { ApiPropertyOptional } from '@nestjs/swagger'
 import { isFunction } from '@nestjs/common/utils/shared.utils'
 
-import { SchemaObjectMetadata } from '@nestjs/swagger/dist/interfaces/schema-object-metadata.interface'
-import { isBuiltInType } from '@nestjs/swagger/dist/utils/is-built-in-type.util'
-import { getTransformMetadata, setTransformMetadata } from '~/utils/transform-decorator-utils'
+import * as TransformerUtils from '~/utils/transform-decorator-utils'
+import * as SwaggerUnits from '~/utils/nestjs-swagger-utils'
 import { getTypeMetadata } from '~/utils/type-decorator-utils'
-import { getApiProperties } from '~/utils/api-property-decorator-utils'
 import { ExcludeHidden } from '~/types/exclude-hidden'
 import { ExcludeOpt } from '~/types/exclude-opt'
 import { ExcludeRef } from '~/types/exclude-ref'
@@ -33,10 +31,10 @@ export type IFilterQuery<T> = {
 }
 
 
-function toSwaggerType(type: SchemaObjectMetadata['type']): string | Function {
+function toSwaggerType(type: SwaggerUnits.SchemaObjectMetadata['type']): string | Function {
   if (isFunction(type) && type.name === 'type') {
     return toSwaggerType((<any>type)())
-  } else if (isFunction(type) && isBuiltInType(type)) {
+  } else if (isFunction(type) && SwaggerUnits.isBuiltInType(type)) {
     return type.name.toLowerCase()
   }
 
@@ -44,12 +42,12 @@ function toSwaggerType(type: SchemaObjectMetadata['type']): string | Function {
 }
 
 
-function applyDecorators(parentRef: Type<any>, targetRef: Type<any>, prop: string, schemaMetadata: SchemaObjectMetadata, prefix = ''): void {
+function applyDecorators(parentRef: Type<any>, targetRef: Type<any>, prop: string, schemaMetadata: SwaggerUnits.SchemaObjectMetadata, prefix = ''): void {
   for (const key of ['$lt', '$gt', '$lte', '$gte', '$eq', '$ne', '$not']) {
     const propertyKey = prefix ? `${prefix}[${prop}][${key}]` : `${prop}[${key}]`
 
-    const transformerMetadata = getTransformMetadata(parentRef, prop)
-    if (transformerMetadata) setTransformMetadata(targetRef, propertyKey, transformerMetadata)
+    const transformerMetadata = TransformerUtils.getTransformMetadata(parentRef, prop)
+    if (transformerMetadata) TransformerUtils.setTransformMetadata(targetRef, propertyKey, transformerMetadata)
 
     const decoratorFactory = ApiPropertyOptional({ ...schemaMetadata, name: propertyKey })
     decoratorFactory(targetRef.prototype, propertyKey)
@@ -58,10 +56,10 @@ function applyDecorators(parentRef: Type<any>, targetRef: Type<any>, prop: strin
   for (const key of ['$in', '$nin']) {
     const propertyKey = prefix ? `${prefix}[${prop}][${key}][]` : `${prop}[${key}][]`
 
-    const transformerMetadata = getTransformMetadata(parentRef, prop)
+    const transformerMetadata = TransformerUtils.getTransformMetadata(parentRef, prop)
 
     if (transformerMetadata) {
-      setTransformMetadata(targetRef, propertyKey, transformerMetadata.map((metadata) => {
+      TransformerUtils.setTransformMetadata(targetRef, propertyKey, transformerMetadata.map((metadata) => {
         const transformFn = metadata.transformFn
 
         return {
@@ -82,7 +80,7 @@ function applyDecorators(parentRef: Type<any>, targetRef: Type<any>, prop: strin
 
 
 function buildClass(targetRef: Type<any>, parentRef: Type<any>, prefix = ''): void {
-  const classSchema = getApiProperties(parentRef)
+  const classSchema = SwaggerUnits.getMetadata(parentRef)
 
   for (const prop in classSchema) {
     const schema = classSchema[prop]

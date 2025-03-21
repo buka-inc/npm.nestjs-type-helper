@@ -2,7 +2,8 @@ import * as R from 'ramda'
 import { Collection, EntityMetadata, Hidden, MetadataStorage, Primary, PrimaryProperty, Ref, Scalar } from '@mikro-orm/core'
 import { Type } from '@nestjs/common'
 import { ExcludeOpt } from '~/types/exclude-opt'
-import { PickType } from '@nestjs/swagger'
+import { inheritTransformationMetadata, inheritValidationMetadata } from '@nestjs/mapped-types'
+import * as ApiPropertyUtils from '~/utils/nestjs-swagger-utils'
 
 
 export type IEntityRefPropertyDto<T> = T extends Scalar
@@ -44,7 +45,15 @@ export function EntityDto<T>(entity: Type<T>): Type<IEntityDto<T>> {
           return keys
         }),
     ),
-  ) as (keyof T)[]
+  )
 
-  return PickType(entity, keys) as unknown as Type<IEntityDto<T>>
+
+  abstract class EntityDtoTypeClass {}
+
+  inheritValidationMetadata(entity, EntityDtoTypeClass, (key) => keys.includes(key))
+  inheritTransformationMetadata(entity, EntityDtoTypeClass, (key) => keys.includes(key))
+
+  ApiPropertyUtils.cloneMetadata(EntityDtoTypeClass, entity, keys)
+
+  return EntityDtoTypeClass as Type<IEntityDto<T>>
 }
