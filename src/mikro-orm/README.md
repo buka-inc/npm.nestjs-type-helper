@@ -13,6 +13,7 @@ Even if you are not a developer of `Buka Inc`, but use `MikroORM` and `NestJS`, 
 >   serialization: {
 >     forceObject: true,
 >   },
+>   forceUndefined: true,
 >   // ...other config
 > });
 > ```
@@ -133,6 +134,38 @@ export class BookEntity extends BaseEntity {
 ```
 
 </details>
+
+## EntityOneToOne
+
+This is a decorator that replace `@OneToOne` of `MikroORM`.
+and it will apply `@ApiProperty` and `class-validator` decorator automatically.
+
+## EntityManyToMany
+
+This is a decorator that replace `@ManyToMany` of `MikroORM`.
+and it will apply `@ApiProperty` and `class-validator` decorator automatically.
+
+## EntityManyToOne
+
+This is a decorator that replace `@ManyToOne` of `MikroORM`.
+and it will apply `@ApiProperty` and `class-validator` decorator automatically.
+
+## EntityOneToMany
+
+This is a decorator that replace `@OneToMany` of `MikroORM`.
+and it will apply `@ApiProperty` and `class-validator` decorator automatically.
+
+## BaseEntityReferenceDto
+
+## EntityDto
+
+This is a type helper like `PickType` export by `@nestjs/swagger` used to build DTO.
+
+```typescript
+import { EntityDto } from "@buka/nestjs-type-helper";
+
+export class BookDto extends EntityDto(Book) {}
+```
 
 ## DatabaseConfig
 
