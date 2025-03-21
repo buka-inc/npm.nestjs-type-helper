@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.4.0...v1.4.1) (2025-03-21)
+
+
+### Performance Improvements
+
+* the EntityDto should not inherit constractor ([24a7816](https://github.com/buka-inc/npm.nestjs-type-helper/commit/24a78168d945c2515fec4ce78071e474c1ddf710))
+
 ## [1.4.0](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.3.4...v1.4.0) (2025-03-19)
 
 
