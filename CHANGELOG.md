@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.4.1...v1.4.2) (2025-03-24)
+
+
+### Bug Fixes
+
+* the IEntityDto should exclude methods ([537e774](https://github.com/buka-inc/npm.nestjs-type-helper/commit/537e7741a938681c907de8a1af52c5edcfaa9421))
+
 ## [1.4.1](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.4.0...v1.4.1) (2025-03-21)
 
 
