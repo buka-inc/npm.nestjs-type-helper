@@ -76,6 +76,7 @@ function VarcharProperty(length: number | undefined, options: ApiScalarEntityPro
     maxLength: length,
     ...(options.schema || {}),
     ...getEnumOptions(options),
+    required: !options.meta.nullable,
     description: options.meta.comment,
   }))
 
@@ -97,6 +98,7 @@ function CharProperty(length: number | undefined, options: ApiScalarEntityProper
     minimum: length,
     ...(options.schema || {}),
     ...getEnumOptions(options),
+    required: !options.meta.nullable,
     description: options.meta.comment,
   }))
 
@@ -114,6 +116,7 @@ function TextProperty(options: ApiScalarEntityPropertyOptions): PropertyDecorato
     type: 'string',
     ...(options.schema || {}),
     ...getEnumOptions(options),
+    required: !options.meta.nullable,
     description: options.meta.comment,
   }))
 
@@ -133,6 +136,7 @@ export function MoneyProperty(options: ApiScalarEntityPropertyOptions): Property
     type: 'string',
     format: 'money',
     ...(options.schema || {}),
+    required: !options.meta.nullable,
     description: options.meta.comment,
   }))
 
@@ -153,6 +157,7 @@ export function IntProperty(options: ApiScalarEntityPropertyOptions): PropertyDe
     maximum: options.meta.unsigned ? 4294967295 : 2147483647,
     ...(options.schema || {}),
     ...getEnumOptions(options),
+    required: !options.meta.nullable,
     description: options.meta.comment,
   }))
 
@@ -173,6 +178,7 @@ export function DoubleProperty(options: ApiScalarEntityPropertyOptions): Propert
     minimum: options.meta.unsigned ? 0 : undefined,
     ...(options.schema || {}),
     ...getEnumOptions(options),
+    required: !options.meta.nullable,
     description: options.meta.comment,
   }))
 
@@ -191,6 +197,7 @@ export function DatetimeProperty(options: ApiScalarEntityPropertyOptions): Prope
     type: 'string',
     format: 'date-time',
     ...(options.schema || {}),
+    required: !options.meta.nullable,
     description: options.meta.comment,
   }))
 

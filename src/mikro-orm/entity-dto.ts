@@ -20,7 +20,7 @@ export type IEntityPropertyDto<T> = T extends Ref<infer U>
     : T
 
 export type IEntityDto<T> = {
-  [K in keyof T as T[K] extends (Hidden | symbol) ? never : K]: IEntityPropertyDto<ExcludeOpt<T[K]>>
+  [K in keyof T as T[K] extends (Hidden | symbol | Function) ? never : K]: IEntityPropertyDto<ExcludeOpt<T[K]>>
 }
 
 
