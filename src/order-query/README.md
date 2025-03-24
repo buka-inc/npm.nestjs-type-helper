@@ -1,4 +1,4 @@
-# OrderQuery
+# OrderQueryType
 
 Simplify the definition of order in query:
 
@@ -17,16 +17,18 @@ Simplify the definition of order in query:
 Let's create an `BookOrderQueryDto` used to order books:
 
 ```typescript
+import { OrderQueryType } from "@buka/nestjs-type-helper";
+
 class BookOrderField {
   publishedAt!: Date;
   price!: number;
 }
 
-class BookOrderQueryDto extends OrderQuery(BookOrder) {}
+class BookOrderQueryDto extends OrderQueryType(BookOrder) {}
 ```
 
 <details>
-  <summary>Code that don't use `OrderQuery`</summary>
+  <summary>Code that don't use `OrderQueryType`</summary>
 
 ```typescript
 import { IsIn, ValidatedNested } from "class-validator";
@@ -52,7 +54,7 @@ class BookOrderQueryDto {
 
 </details>
 
-`OrderQuery` is friendly to `@nestjs/swagger`, `class-validator` and `class-transformer`.
+`OrderQueryType` is friendly to `@nestjs/swagger`, `class-validator` and `class-transformer`.
 And it could be used in [`mikroORM`](https://mikro-orm.io/) without additional processing.
 
 ```typescript

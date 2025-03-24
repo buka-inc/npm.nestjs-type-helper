@@ -1,15 +1,11 @@
 import { Type } from '@nestjs/common'
 import * as swagger from '@nestjs/swagger'
-import { getMetadata } from '~/utils/nestjs-swagger-utils.js'
 import * as transformer from 'class-transformer'
 import * as validator from 'class-validator'
 
-
-type IOrderQuery<T> = {
-  $order?: {
-    [K in keyof T]?: 'desc' | 'asc'
-  }[]
-}
+import { getMetadata } from '~/utils/nestjs-swagger-utils.js'
+import { IOrderQuery } from './types/order-query.js'
+import { BaseOrderQuery } from './base-order-query.js'
 
 
 function buildClass(targetRef: Type<any>, parentRef: Type<any>): void {
@@ -29,8 +25,8 @@ function buildClass(targetRef: Type<any>, parentRef: Type<any>): void {
   }
 }
 
-export function OrderQuery<T>(classRef: Type<T>): Type<IOrderQuery<T>> {
-  abstract class OrderQueryClass {}
+export function OrderQueryType<T>(classRef: Type<T>): Type<IOrderQuery<T>> {
+  abstract class OrderQueryClass extends BaseOrderQuery {}
 
   buildClass(OrderQueryClass as any, classRef)
   return OrderQueryClass as Type<IOrderQuery<T>>

@@ -19,7 +19,7 @@ Let's create an `BookFilterQueryDto` used to search books:
 
 ```typescript
 // ./dto/book-filter-query.dto.ts
-import { Page, PageQuery, Pagination } from "@buka/nestjs-type-helper";
+import { FilterQueryType } from "@buka/nestjs-type-helper";
 import { IsInt, IsString } from 'class-validator'
 import { ToNumber } from '@buka/class-transformer-extra'
 
@@ -33,12 +33,12 @@ interface BookFilterFields {
   author?: string
 }
 
-interface BookFilterQueryDto extends FilterQuery(BookFilterFields) {
+interface BookFilterQueryDto extends FilterQueryType(BookFilterFields) {
 }
 ```
 
 <details>
-  <summary>Code that don't use `FilterQuery`</summary>
+  <summary>Code that don't use `FilterQueryType`</summary>
 
 ```typescript
 interface BookFilterPriceField {
@@ -80,7 +80,7 @@ interface BookFilterQueryDto {
 
 </details>
 
-`FilterQuery` is friendly to `@nestjs/swagger`, `class-validator` and `class-transformer`.
+`FilterQueryType` is friendly to `@nestjs/swagger`, `class-validator` and `class-transformer`.
 And it could be used in [`mikroORM`](https://mikro-orm.io/) without additional processing.
 
 ```typescript

@@ -3,11 +3,12 @@ import { ApiProperty } from '@nestjs/swagger'
 import { Type as ClassType } from 'class-transformer'
 import { ValidateNested } from 'class-validator'
 import { Pagination } from './pagination.js'
-import { PageQuery } from './page-query.js'
+import { PageQueryRo } from './page-query.ro.js'
 import { EntityDTO } from '@mikro-orm/core'
+import { PageRo } from './page.ro.js'
 
 
-export function Page<T>(classRef: Type<T>): Type<{ items: T[]; pagination: Pagination }> {
+export function PageType<T>(classRef: Type<T>): typeof PageRo<T> {
   abstract class TypeClassPage {
     @ApiProperty({
       type: () => classRef,
@@ -23,19 +24,17 @@ export function Page<T>(classRef: Type<T>): Type<{ items: T[]; pagination: Pagin
     @ClassType(() => Pagination)
     @ValidateNested()
     pagination!: Pagination
+
+    static from<T>(items: T[], total: number, pageQuery?: PageQueryRo): { items: EntityDTO<T>[]; pagination: Pagination } {
+      return {
+        items: items.map((item) => {
+          if (item && typeof item['toObject'] === 'function') return item['toObject']() as EntityDTO<T>
+          return item as EntityDTO<T>
+        }),
+        pagination: Pagination.from(total, pageQuery),
+      }
+    }
   }
 
-  return TypeClassPage as Type<{
-    items: T[]
-    pagination: Pagination
-  }>
+  return TypeClassPage as typeof PageRo<T>
 }
-
-
-Page.from = <T>(items: T[], total: number, pageQuery: PageQuery): { items: EntityDTO<T>[]; pagination: Pagination } => ({
-  items: items.map((item) => {
-    if (item && typeof item['toObject'] === 'function') return item['toObject']() as EntityDTO<T>
-    return item as EntityDTO<T>
-  }),
-  pagination: Pagination.from(total, pageQuery),
-})

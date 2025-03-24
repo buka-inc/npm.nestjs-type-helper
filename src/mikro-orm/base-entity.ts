@@ -1,6 +1,6 @@
 import { BigIntType, Config, DefineConfig, OptionalProps, PrimaryKey, PrimaryKeyProp } from '@mikro-orm/core'
 // import { ApiProperty } from '@nestjs/swagger'
-import { EntityProperty } from './entity-property.decorator.js'
+import { EntityProperty } from './decorators/entity-property.decorator.js'
 import { ApiProperty } from '@nestjs/swagger'
 import { IsNumberString } from 'class-validator'
 

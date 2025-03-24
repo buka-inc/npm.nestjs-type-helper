@@ -1,5 +1,5 @@
 import { AnyEntity, Enum, EnumOptions } from '@mikro-orm/core'
-import { ColumnTypeRequired } from './column-type-required'
+import { ColumnTypeRequired } from '../types/column-type-required'
 import { ApiEntityProperty } from './api-entity-property.decorator'
 
 

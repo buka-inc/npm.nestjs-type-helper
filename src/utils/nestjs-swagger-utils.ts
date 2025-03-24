@@ -6,9 +6,10 @@ import { METADATA_FACTORY_NAME } from '@nestjs/swagger/dist/plugin/plugin-consta
 import { Type } from '@nestjs/common'
 import { clonePluginMetadataFactory } from '@nestjs/swagger/dist/type-helpers/mapped-types.utils'
 import { ApiProperty } from '@nestjs/swagger'
+import { isFunction } from '@nestjs/common/utils/shared.utils'
+import { isBuiltInType } from '@nestjs/swagger/dist/utils/is-built-in-type.util'
 
 export { SchemaObjectMetadata } from '@nestjs/swagger/dist/interfaces/schema-object-metadata.interface'
-export { isBuiltInType } from '@nestjs/swagger/dist/utils/is-built-in-type.util'
 
 
 const modelPropertiesAccessor = new ModelPropertiesAccessor()
@@ -71,16 +72,31 @@ function getMetadataOfPlugin(classRef: Type<any>, propertyKey?: string): SchemaO
  *
  * 可以利用这个函数，遍历 Dto/Entity 上定义的所有属性，而不需要去实例化一个对象
  */
-export function getMetadata(classRef: Type<any>): Record<string, SchemaObjectMetadata> {
+export function getMetadata(classRef: Type<any>): Record<string, SchemaObjectMetadata>
+export function getMetadata(classRef: Type<any>, propertyKey: string): SchemaObjectMetadata
+export function getMetadata(classRef: Type<any>, propertyKey?: string): SchemaObjectMetadata | Record<string, SchemaObjectMetadata> {
   const propsInDecorator = getMetadataOfDecorator(classRef)
   const propsInPlugin = getMetadataOfPlugin(classRef)
 
-  return R.mergeRight(propsInPlugin, propsInDecorator)
+  const metadataMap = R.mergeRight(propsInPlugin, propsInDecorator)
+  if (propertyKey) return metadataMap[propertyKey]
+  return metadataMap
 }
 
 /**
  * Set @ApiProperty() to all properties of the class.
  */
-export function setApiProperties(classRef: Type<any>, props: Record<string, SchemaObjectMetadata>): void {
+export function overridePluginMetadata(classRef: Type<any>, props: Record<string, SchemaObjectMetadata>): void {
   classRef[METADATA_FACTORY_NAME] = () => props
+}
+
+
+export function getMetadataType(metadata: SchemaObjectMetadata): string | Function {
+  if (isFunction(metadata.type) && metadata.type.name === 'type') {
+    return getMetadataType((<any>metadata.type)())
+  } else if (isFunction(metadata.type) && isBuiltInType(metadata.type)) {
+    return metadata.type.name.toLowerCase()
+  }
+
+  return metadata.type as (string | Function)
 }

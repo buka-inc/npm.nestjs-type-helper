@@ -1,7 +1,7 @@
 import { Property, PropertyOptions } from '@mikro-orm/core'
 import { ApiPropertyOptions } from '@nestjs/swagger'
 import { ApiEntityProperty } from './api-entity-property.decorator'
-import { ColumnTypeRequired } from './column-type-required'
+import { ColumnTypeRequired } from '../types/column-type-required'
 
 
 export function EntityProperty<T extends object>(

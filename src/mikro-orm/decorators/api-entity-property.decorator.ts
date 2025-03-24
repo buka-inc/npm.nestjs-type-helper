@@ -1,9 +1,9 @@
 import { ApiHideProperty, ApiProperty, getSchemaPath } from '@nestjs/swagger'
 import { EntityName, EntityProperty, MetadataStorage, ReferenceKind } from '@mikro-orm/core'
 import { isSubclassOf } from '~/utils/is-subclass-of'
-import { BaseEntityReferenceDto } from './base-entity-reference.dto'
+import { BaseEntityReferenceDto } from '../base-entity-reference.dto'
 import { ApiScalarEntityProperty } from './api-scalar-entity-property.decorator'
-import { BaseEntity } from './base-entity'
+import { BaseEntity } from '../base-entity'
 import { Type } from 'class-transformer'
 import { ValidateNested } from 'class-validator'
 
