@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.3](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.4.2...v1.4.3) (2025-03-24)
+
+
+### Performance Improvements
+
+* the FilterQuery decorator missing validator and transformer ([c6441e2](https://github.com/buka-inc/npm.nestjs-type-helper/commit/c6441e20c2ed81614b70b5949e8a3e0f1851c31a))
+
 ## [1.4.2](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.4.1...v1.4.2) (2025-03-24)
 
 
