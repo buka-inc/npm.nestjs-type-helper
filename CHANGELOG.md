@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.4](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.4.3...v1.4.4) (2025-03-25)
+
+
+### Bug Fixes
+
+* wrong filter query types ([3b1f72f](https://github.com/buka-inc/npm.nestjs-type-helper/commit/3b1f72fc192a0ea68c475612662a4edbe1cc5df4))
+
 ## [1.4.3](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.4.2...v1.4.3) (2025-03-24)
 
 
