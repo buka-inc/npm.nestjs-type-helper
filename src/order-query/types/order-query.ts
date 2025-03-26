@@ -1,5 +1,7 @@
+export type IOrderProperties<T> = {
+  [K in keyof T]?: 'desc' | 'asc'
+}
+
 export type IOrderQuery<T> = {
-  $order?: {
-    [K in keyof T]?: 'desc' | 'asc'
-  }[]
+  $order?: IOrderProperties<T>[]
 }

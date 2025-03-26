@@ -1,33 +1,44 @@
 import { Type } from '@nestjs/common'
-import * as swagger from '@nestjs/swagger'
-import * as transformer from 'class-transformer'
-import * as validator from 'class-validator'
 
-import { getMetadata } from '~/utils/nestjs-swagger-utils.js'
-import { IOrderQuery } from './types/order-query.js'
+import { IOrderProperties, IOrderQuery } from './types/order-query.js'
 import { BaseOrderQuery } from './base-order-query.js'
 
+import * as SwaggerUtils from '~/utils/nestjs-swagger-utils.js'
+import { IsIn, IsOptional, ValidateNested } from 'class-validator'
+import { Type as ClassType } from 'class-transformer'
+import { ApiPropertyOptional } from '@nestjs/swagger'
 
-function buildClass(targetRef: Type<any>, parentRef: Type<any>): void {
-  const classSchema = getMetadata(parentRef)
 
-  abstract class OrderClass {}
+function OrderPropertiesType<T>(classRef: Type<T>, rootRef: Type<any>): Type<IOrderProperties<T>> {
+  const swaggerMetadata = SwaggerUtils.getMetadata(classRef)
 
-  validator.ValidateNested({ each: true })(targetRef.prototype, '$order')
-  transformer.Type(() => OrderClass)(targetRef.prototype, '$order')
-  validator.IsOptional()(targetRef.prototype, '$order')
+  abstract class OrderPropertiesClass {}
 
-  for (const prop in classSchema) {
-    swagger.ApiPropertyOptional({ name: `$order[${prop}]`, type: 'string', enum: ['desc', 'asc'] })(targetRef.prototype, `$order[${prop}]`)
+  for (const propertyKey in swaggerMetadata) {
+    const mpath = `$order[][${propertyKey}]`
+    ApiPropertyOptional({
+      name: mpath,
+      required: false,
+      type: 'string',
+      enum: ['desc', 'asc'],
+      enumName: 'QUERY_ORDER',
+    })(rootRef.prototype, mpath)
 
-    validator.IsIn(['desc', 'asc'])(OrderClass.prototype, prop)
-    validator.IsOptional()(OrderClass.prototype, prop)
+    IsIn(['desc', 'asc'])(OrderPropertiesClass.prototype, propertyKey)
+    IsOptional()(OrderPropertiesClass.prototype, propertyKey)
   }
+
+  return OrderPropertiesClass as Type<IOrderProperties<T>>
 }
 
 export function OrderQueryType<T>(classRef: Type<T>): Type<IOrderQuery<T>> {
   abstract class OrderQueryClass extends BaseOrderQuery {}
 
-  buildClass(OrderQueryClass as any, classRef)
+  const OrderPropertiesClass = OrderPropertiesType(classRef, OrderQueryClass as Type<any>)
+
+  ValidateNested({ each: true })(OrderQueryClass.prototype, '$order')
+  ClassType(() => OrderPropertiesClass)(OrderQueryClass.prototype, '$order')
+  IsOptional({ each: true })(OrderQueryClass.prototype, '$order')
+
   return OrderQueryClass as Type<IOrderQuery<T>>
 }
