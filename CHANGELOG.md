@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.5](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.4.4...v1.4.5) (2025-03-26)
+
+
+### Bug Fixes
+
+* wrong OrderQueryType ([833a539](https://github.com/buka-inc/npm.nestjs-type-helper/commit/833a539aeeccd48fe4938161feba902d84bbfcb6))
+
 ## [1.4.4](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.4.3...v1.4.4) (2025-03-25)
 
 
