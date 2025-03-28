@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.7](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.4.6...v1.4.7) (2025-03-28)
+
+
+### Bug Fixes
+
+* duplicate name of EntityDtoType ([2a06d08](https://github.com/buka-inc/npm.nestjs-type-helper/commit/2a06d0844f7527f797ad07b3294ee4a77c621694))
+
 ## [1.4.6](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.4.5...v1.4.6) (2025-03-28)
 
 
