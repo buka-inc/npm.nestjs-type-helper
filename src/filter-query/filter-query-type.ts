@@ -97,6 +97,7 @@ export function FilterQueryPropertyType<T>(classRef: Type<T>, propertyKey: strin
   }
 
   const typeMetadata = ClassTransformerUtils.getTypeMetadata(classRef, propertyKey)
+  console.log(classRef, propertyKey, typeMetadata, typeMetadata.typeFunction())
   if (!typeMetadata) return
 
   return FilterQueryClassType(typeMetadata.typeFunction(), root, prependPrefix(prefix, propertyKey)) as Type<IFilterQuery<T>>

@@ -6,6 +6,7 @@ import { ApiScalarEntityProperty } from './api-scalar-entity-property.decorator'
 import { BaseEntity } from '../base-entity'
 import { Type } from 'class-transformer'
 import { ValidateNested } from 'class-validator'
+import { PrimaryType } from '../primary-type'
 
 interface ApiEntityPropertyOptions {
   example?: any
@@ -39,8 +40,10 @@ export function ApiEntityProperty<T extends object>(options?: ApiEntityPropertyO
     const getEntity = (): EntityName<any> | undefined => {
       const ent = prop.entity()
       if (prop.eager === true) return ent
-      if (typeof ent === 'function' && isSubclassOf(ent, BaseEntity)) {
-        return BaseEntityReferenceDto
+
+      if (typeof ent === 'function') {
+        if (isSubclassOf(ent, BaseEntity)) return BaseEntityReferenceDto
+        return PrimaryType(ent as any)
       }
     }
 

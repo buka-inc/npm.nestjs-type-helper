@@ -1,39 +1,25 @@
-import * as R from 'ramda'
-import { EntityMetadata, MetadataStorage } from '@mikro-orm/core'
 import { Type } from '@nestjs/common'
 import { inheritTransformationMetadata, inheritValidationMetadata } from '@nestjs/mapped-types'
 import * as ApiPropertyUtils from '~/utils/nestjs-swagger-utils'
 import { IEntityDto } from './types/entity-dto'
+import * as MikroOrmUtils from '~/utils/mikro-orm-utils'
 
 
 export function EntityDtoType<T>(entity: Type<T>): Type<IEntityDto<T>> {
-  const metadatas: EntityMetadata<any>[] = []
+  const properties = MikroOrmUtils.getMetadata(entity)
+  if (!properties.length) {
+    throw new Error(`Cannot create EntityDtoType for ${entity.name} because it isn't an MikroORM Entity.`)
+  }
 
-  let parent: any = entity
-  do {
-    const meta = MetadataStorage.getMetadataFromDecorator(parent)
-    if (meta instanceof EntityMetadata) metadatas.push(meta)
-    parent = Object.getPrototypeOf(parent)
-  } while (parent && parent !== Object.prototype)
-
-  const keys = R.uniq(
-    R.unnest(
-      metadatas
-        .map((meta) => {
-          const keys = Object.entries(meta.properties)
-            .filter(([, prop]) => prop.hidden !== true)
-            .map(([key]) => key)
-
-          return keys
-        }),
-    ),
-  )
+  const keys = properties
+    .filter((prop) => prop.hidden !== true)
+    .map((prop) => prop.name)
 
 
   abstract class EntityDtoTypeClass {}
 
-  inheritValidationMetadata(entity, EntityDtoTypeClass, (key) => keys.includes(key))
-  inheritTransformationMetadata(entity, EntityDtoTypeClass, (key) => keys.includes(key))
+  inheritValidationMetadata(entity, EntityDtoTypeClass, (key) => keys.includes(key as any))
+  inheritTransformationMetadata(entity, EntityDtoTypeClass, (key) => keys.includes(key as any))
 
   ApiPropertyUtils.cloneMetadata(EntityDtoTypeClass, entity, keys)
 
