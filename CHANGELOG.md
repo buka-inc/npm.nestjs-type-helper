@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.6](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.4.5...v1.4.6) (2025-03-28)
+
+
+### Bug Fixes
+
+* correct FilterQueryType for custom base entity ([33df762](https://github.com/buka-inc/npm.nestjs-type-helper/commit/33df76201298c3e8192820b2129cdd271ca3a027))
+
 ## [1.4.5](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.4.4...v1.4.5) (2025-03-26)
 
 
