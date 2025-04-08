@@ -26,11 +26,13 @@ export function cloneMetadata(target: Function, source: Type<unknown>, keys: str
     (metadata: Record<string, any>) => R.pick(keys, metadata),
   )
 
-  keys.forEach((propertyKey) => {
-    const metadata = getMetadataOfDecorator(source, propertyKey)
-    const decoratorFactory = ApiProperty(metadata)
-    decoratorFactory(target.prototype, propertyKey)
-  })
+  for (const propertyKey of keys) {
+    const metadata = getMetadataOfPlugin(source, propertyKey)
+    if (metadata) {
+      const decoratorFactory = ApiProperty(metadata)
+      decoratorFactory(target.prototype, propertyKey)
+    }
+  }
 }
 
 /**
