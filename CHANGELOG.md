@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.8](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.4.7...v1.4.8) (2025-04-08)
+
+
+### Bug Fixes
+
+* wrong ApiProperty applied when primary key without ApiProperty descorator ([d338be9](https://github.com/buka-inc/npm.nestjs-type-helper/commit/d338be9f1c2872c6ff90731d97801e9e40c2af8a))
+
 ## [1.4.7](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.4.6...v1.4.7) (2025-03-28)
 
 
