@@ -33,6 +33,7 @@ export function ApiScalarEntityProperty(options: ApiScalarEntityPropertyOptions)
     if (columnType.startsWith('int')) return IntProperty(options)
     if (columnType.startsWith('smallint')) return IntProperty(options)
     if (columnType.startsWith('double')) return DoubleProperty(options)
+    if (columnType.startsWith('decimal') || columnType.startsWith('numeric')) return DecimalProperty(options)
     if (columnType === 'datetime') return DatetimeProperty(options)
   }
 
@@ -43,6 +44,7 @@ export function ApiScalarEntityProperty(options: ApiScalarEntityPropertyOptions)
   if (meta.type === 'int') return IntProperty(options)
   if (meta.type === 'smallint') return IntProperty(options)
   if (meta.type === 'double') return DoubleProperty(options)
+  if (meta.type === 'decimal' || meta.type === 'numeric') return DecimalProperty(options)
   if (meta.type === 'datetime') return DatetimeProperty(options)
 
   return () => {}
@@ -169,6 +171,29 @@ export function DoubleProperty(options: ApiScalarEntityPropertyOptions): Propert
 
   if (options.validate) {
     decorators.push(IsNumber())
+    if (options.meta.nullable) decorators.push(IsOptional())
+  }
+
+  decorators.push(ApiProperty({
+    type: 'number',
+    format: 'double',
+    minimum: options.meta.unsigned ? 0 : undefined,
+    ...(options.schema || {}),
+    ...getEnumOptions(options),
+    required: !options.meta.nullable,
+    description: options.meta.comment,
+  }))
+
+  return applyDecorators(...decorators)
+}
+
+export function DecimalProperty(options: ApiScalarEntityPropertyOptions): PropertyDecorator {
+  const decorators: PropertyDecorator[] = []
+
+  if (options.validate) {
+    if (options.meta.scale) decorators.push(IsNumber({ maxDecimalPlaces: options.meta.scale }))
+    else decorators.push(IsNumber())
+
     if (options.meta.nullable) decorators.push(IsOptional())
   }
 
