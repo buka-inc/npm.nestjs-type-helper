@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.4.8...v1.5.0) (2025-04-27)
+
+
+### Features
+
+* support decimal and numeric ([e6473b7](https://github.com/buka-inc/npm.nestjs-type-helper/commit/e6473b77679b06e78af4a1b58a89dd10f84aeb4b))
+
 ## [1.4.8](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.4.7...v1.4.8) (2025-04-08)
 
 
