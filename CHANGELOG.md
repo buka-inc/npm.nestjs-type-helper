@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.1](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.6.0...v1.6.1) (2025-05-11)
+
+
+### Performance Improvements
+
+* add optional option to BaseEntityReferenceProperty ([b346a53](https://github.com/buka-inc/npm.nestjs-type-helper/commit/b346a53bc2b0cd3136610e67244ec16d3c20603c))
+
 ## [1.6.0](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.5.0...v1.6.0) (2025-05-11)
 
 
