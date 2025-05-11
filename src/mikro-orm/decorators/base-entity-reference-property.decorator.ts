@@ -9,14 +9,14 @@ export interface BaseEntityReferencePropertyOptions {
   optional?: boolean
 }
 
-export function BaseEntityReferenceProperty(options: BaseEntityReferencePropertyOptions): PropertyDecorator {
+export function BaseEntityReferenceProperty(options?: BaseEntityReferencePropertyOptions): PropertyDecorator {
   const decorators = [
-    ApiProperty({ type: BaseEntityReferenceDto, required: !options.optional }),
+    ApiProperty({ type: BaseEntityReferenceDto, required: !options?.optional }),
     Type(() => BaseEntityReferenceDto),
     ValidateNested(),
   ]
 
-  if (options.optional) {
+  if (options?.optional) {
     decorators.push(IsOptional())
   }
 
