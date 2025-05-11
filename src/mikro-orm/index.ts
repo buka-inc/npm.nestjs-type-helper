@@ -8,6 +8,7 @@ export * from './decorators/entity-one-to-one.decorator.js'
 export * from './decorators/entity-many-to-one.decorator.js'
 export * from './decorators/entity-many-to-many.decorator.js'
 export * from './decorators/entity-one-to-many.decorator.js'
+export * from './decorators/base-entity-reference-property.decorator.js'
 
 export * from './primary-type.js'
 export * from './entity-dto-type.js'
