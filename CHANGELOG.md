@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.5.0...v1.6.0) (2025-05-11)
+
+
+### Features
+
+* add BaseEntityReferenceProperty decorator ([c79acb9](https://github.com/buka-inc/npm.nestjs-type-helper/commit/c79acb9453ba143524df771600f8e1c76144a1a6))
+
 ## [1.5.0](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.4.8...v1.5.0) (2025-04-27)
 
 
