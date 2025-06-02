@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.6.2...v1.7.0) (2025-06-02)
+
+
+### Features
+
+* enhance BaseEntityReferenceProperty to support 'each' option for array validation ([cb017d2](https://github.com/buka-inc/npm.nestjs-type-helper/commit/cb017d2b6403484d5654f6631e1ecef02b15bead))
+
 ## [1.6.2](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.6.1...v1.6.2) (2025-05-11)
 
 
