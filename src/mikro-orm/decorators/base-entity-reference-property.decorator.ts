@@ -21,5 +21,5 @@ export function BaseEntityReferenceProperty(options?: BaseEntityReferencePropert
     decorators.push(IsOptional())
   }
 
-  return applyDecorators()
+  return applyDecorators(...decorators)
 }
