@@ -7,13 +7,14 @@ import { BaseEntityReferenceDto } from '../base-entity-reference.dto'
 
 export interface BaseEntityReferencePropertyOptions {
   optional?: boolean
+  each?: boolean
 }
 
 export function BaseEntityReferenceProperty(options?: BaseEntityReferencePropertyOptions): PropertyDecorator {
   const decorators = [
-    ApiProperty({ type: BaseEntityReferenceDto, required: !options?.optional }),
+    ApiProperty({ type: BaseEntityReferenceDto, required: !options?.optional, isArray: options?.each }),
     Type(() => BaseEntityReferenceDto),
-    ValidateNested(),
+    ValidateNested({ each: options?.each }),
   ]
 
   if (options?.optional) {
