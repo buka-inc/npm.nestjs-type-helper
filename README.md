@@ -72,7 +72,7 @@ Rewrite by `@buka/nestjs-type-helpers`:
 
 ```typescript
 import { BaseEntity, Entity } from "@mikro-orm/core";
-import { EntityProperty } from "./mikro-orm";
+import { EntityProperty } from "@buka/nestjs-type-helper";
 
 @Entity()
 export class Book extends BaseEntity {

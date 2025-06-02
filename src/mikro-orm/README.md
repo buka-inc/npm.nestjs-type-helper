@@ -35,6 +35,18 @@ Even if you are not a developer of `Buka Inc`, but use `MikroORM` and `NestJS`, 
 >   }
 > }
 > ```
+>
+> Add extraModels when create swagger document is optional, but recommended:
+>
+> ```typescript
+> const document = SwaggerModule.createDocument(
+>   app,
+>   {
+>     extraModels: [BaseEntityReferenceDto],
+>   },
+>   docOptions
+> );
+> ```
 
 ## `BaseEntity`
 
