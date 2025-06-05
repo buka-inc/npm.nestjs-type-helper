@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.7.2](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.7.1...v1.7.2) (2025-06-05)
+
+
+### Bug Fixes
+
+* the EntityProperty decorator not work with bigint ([cb811aa](https://github.com/buka-inc/npm.nestjs-type-helper/commit/cb811aafee2bd00540b4e2c9f65c3cca3239ce6b))
+* the EntityProperty decorator not work with boolean ([58ed68a](https://github.com/buka-inc/npm.nestjs-type-helper/commit/58ed68a2babeef825d51cd29e59d2798170885ee))
+* the EntityProperty decorator not work with tinyint ([35e103a](https://github.com/buka-inc/npm.nestjs-type-helper/commit/35e103ae6a04dafaea454323f02291c232a72d82))
+
 ## [1.7.1](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.7.0...v1.7.1) (2025-06-02)
 
 
