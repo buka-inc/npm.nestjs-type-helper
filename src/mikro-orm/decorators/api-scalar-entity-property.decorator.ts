@@ -1,4 +1,4 @@
-import { EntityProperty } from '@mikro-orm/core'
+import { BigIntType, EntityProperty } from '@mikro-orm/core'
 import { applyDecorators } from '@nestjs/common'
 import { ApiProperty } from '@nestjs/swagger'
 import { IsBoolean, IsCurrency, IsInt, IsISO8601, IsNumber, IsOptional, IsString, MaxLength, MinLength } from 'class-validator'
@@ -50,8 +50,10 @@ export function ApiScalarEntityProperty(options: ApiScalarEntityPropertyOptions)
   if (meta.type === 'decimal' || meta.type === 'numeric') return DecimalProperty(options)
   if (meta.type === 'datetime') return DatetimeProperty(options)
   if (meta.type === 'boolean' || meta.type === 'bool') return BooleanProperty(options)
+  if (meta.type === 'bigint') return BigIntProperty(options)
+  if ((meta.type as any) instanceof BigIntType) return BigIntProperty(options)
 
-
+  console.log(meta.type)
   logger.warn(`No decorator founded for type ${meta.type} for property ${meta.name}.`)
 
   return () => {}
@@ -148,6 +150,49 @@ export function MoneyProperty(options: ApiScalarEntityPropertyOptions): Property
     required: !options.meta.nullable,
     description: options.meta.comment,
   }))
+
+  return applyDecorators(...decorators)
+}
+
+export function BigIntProperty(options: ApiScalarEntityPropertyOptions): PropertyDecorator {
+  const { meta } = options
+
+  let mode: 'string' | 'number'
+  if (meta.type === 'bigint') {
+    mode = 'string'
+  } else if ((meta.type as any) instanceof BigIntType) {
+    const metaType = meta.type as unknown as BigIntType
+    mode = metaType.mode === 'string' ? 'string' : 'number'
+  } else {
+    throw new Error(`Unsupported type for BigIntProperty: ${meta.type}`)
+  }
+
+  const decorators: PropertyDecorator[] = []
+
+  if (options.validate) {
+    decorators.push(IsString())
+    if (options.meta.nullable) decorators.push(IsOptional())
+  }
+
+  if (mode === 'string') {
+    decorators.push(ApiProperty({
+      type: 'string',
+      ...(options.schema || {}),
+      ...getEnumOptions(options),
+      required: !options.meta.nullable,
+      description: options.meta.comment,
+    }))
+  } else {
+    decorators.push(ApiProperty({
+      type: 'integer',
+      format: 'int64',
+      ...(options.schema || {}),
+      ...getEnumOptions(options),
+      required: !options.meta.nullable,
+      description: options.meta.comment,
+    }))
+  }
+
 
   return applyDecorators(...decorators)
 }
