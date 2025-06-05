@@ -1,7 +1,8 @@
 import { EntityProperty } from '@mikro-orm/core'
 import { applyDecorators } from '@nestjs/common'
 import { ApiProperty } from '@nestjs/swagger'
-import { IsCurrency, IsInt, IsISO8601, IsNumber, IsOptional, IsString, MaxLength, MinLength } from 'class-validator'
+import { IsBoolean, IsCurrency, IsInt, IsISO8601, IsNumber, IsOptional, IsString, MaxLength, MinLength } from 'class-validator'
+import { logger } from '~/utils/logger'
 
 interface ApiScalarEntityPropertyOptions {
   meta: EntityProperty
@@ -46,6 +47,10 @@ export function ApiScalarEntityProperty(options: ApiScalarEntityPropertyOptions)
   if (meta.type === 'double') return DoubleProperty(options)
   if (meta.type === 'decimal' || meta.type === 'numeric') return DecimalProperty(options)
   if (meta.type === 'datetime') return DatetimeProperty(options)
+  if (meta.type === 'boolean' || meta.type === 'bool') return BooleanProperty(options)
+
+
+  logger.warn(`No decorator founded for type ${meta.type} for property ${meta.name}.`)
 
   return () => {}
 }
@@ -221,6 +226,24 @@ export function DatetimeProperty(options: ApiScalarEntityPropertyOptions): Prope
   decorators.push(ApiProperty({
     type: 'string',
     format: 'date-time',
+    ...(options.schema || {}),
+    required: !options.meta.nullable,
+    description: options.meta.comment,
+  }))
+
+  return applyDecorators(...decorators)
+}
+
+export function BooleanProperty(options: ApiScalarEntityPropertyOptions): PropertyDecorator {
+  const decorators: PropertyDecorator[] = []
+
+  if (options.validate) {
+    decorators.push(IsBoolean())
+    if (options.meta.nullable) decorators.push(IsOptional())
+  }
+
+  decorators.push(ApiProperty({
+    type: 'boolean',
     ...(options.schema || {}),
     required: !options.meta.nullable,
     description: options.meta.comment,
