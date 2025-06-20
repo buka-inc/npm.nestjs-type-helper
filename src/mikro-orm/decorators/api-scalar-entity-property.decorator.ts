@@ -53,7 +53,6 @@ export function ApiScalarEntityProperty(options: ApiScalarEntityPropertyOptions)
   if (meta.type === 'bigint') return BigIntProperty(options)
   if ((meta.type as any) instanceof BigIntType) return BigIntProperty(options)
 
-  console.log(meta.type)
   logger.warn(`No decorator founded for type ${meta.type} for property ${meta.name}.`)
 
   return () => {}
