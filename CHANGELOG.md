@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.0.0](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.7.2...v2.0.0) (2025-08-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* rename PageType to PagedList, PageQueryRo to PagedListQueryDto, PageRo<T> to PagedList<T>
+
+### Features
+
+* correct pagination class name ([9db5f7b](https://github.com/buka-inc/npm.nestjs-type-helper/commit/9db5f7bbe1a94a4360370fc7c26b48c3a04e0087))
+
+
+### Bug Fixes
+
+* remove console.log ([8d51628](https://github.com/buka-inc/npm.nestjs-type-helper/commit/8d51628192b3e8fab1e26d956d3a1bbea0e73aa0))
+
 ## [1.7.2](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.7.1...v1.7.2) (2025-06-05)
 
 
