@@ -1,21 +1,22 @@
 # Pagination
 
-Export `Page`, `PageQuery` and `Pagination` Class simplify the code for paging queries. And it is friendly to `@nestjs/swagger`, `class-validator` and `class-transformer`.
+Export `PagedList`, `PageQueryDto` and `Pagination` Class simplify the code for paging queries. And it is friendly to `@nestjs/swagger`, `class-validator` and `class-transformer`.
 
 ## Usage
 
 ```typescript
 // ./dto/list-books.ro
-import { PageType } from "@buka/nestjs-type-helper";
-import { Book } from "../entity/book.entity";
+import {PagedListType} from "@buka/nestjs-type-helper";
+import {Book} from "../entity/book.entity";
 
-export class ListBooksRo extends PageType(Book) {}
+export class ListBooksRo extends PagedListType(Book) {}
 ```
 
 ```typescript
 // app.controller.ts
-import { Page, PageQuery, PageQueryRo } from "@buka/nestjs-type-helper";
-import { ListBooksRo } from "./dto/list-books.ro";
+import {Query} from "@nestjs/common";
+import {Page, PageQueryDto} from "@buka/nestjs-type-helper";
+import {ListBooksRo} from "./dto/list-books.ro";
 
 @Controller()
 export class AppController {
@@ -25,26 +26,16 @@ export class AppController {
   );
 
   @Get()
-  async listBooks(@PageQuery() pageQueryRo: PageQueryRo): ListBooksRo {
+  async listBooks(@Query() pageQueryDto: PageQueryDto): ListBooksRo {
     const [items, total] = await this.em.findAndCount(
       {},
       {
-        limit: pageQueryRo.limit,
-        offset: pageQueryRo.offset,
+        limit: pageQueryDto.limit,
+        offset: pageQueryDto.offset,
       }
     );
 
     return ListBooksRo.from(items, total, pageQueryRo);
-
-    // Page.from is sugar of
-    //
-    // return {
-    //   items,
-    //   pagination: {
-    //     total,
-    //     ...pageQuery,
-    //   },
-    // };
   }
 }
 ```

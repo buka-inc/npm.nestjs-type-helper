@@ -1,5 +1,5 @@
 import { IsInt, IsOptional, Min } from 'class-validator'
-import { PageQueryRo } from './page-query.ro.js'
+import { PagedListQueryDto } from './paged-list-query.dto.js'
 import { ApiProperty } from '@nestjs/swagger'
 
 export class Pagination {
@@ -31,11 +31,11 @@ export class Pagination {
   @Min(0)
   offset?: number
 
-  static from(total: number, pageQueryRo?: PageQueryRo): Pagination {
+  static from(total: number, pageQuery?: PagedListQueryDto): Pagination {
     const pagination = new Pagination()
     pagination.total = total
-    pagination.limit = pageQueryRo?.$limit
-    pagination.offset = pageQueryRo?.$offset
+    pagination.limit = pageQuery?.$limit
+    pagination.offset = pageQuery?.$offset
 
     return pagination
   }

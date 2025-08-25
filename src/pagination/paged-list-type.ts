@@ -3,12 +3,12 @@ import { ApiProperty } from '@nestjs/swagger'
 import { Type as ClassType } from 'class-transformer'
 import { ValidateNested } from 'class-validator'
 import { Pagination } from './pagination.js'
-import { PageQueryRo } from './page-query.ro.js'
+import { PagedListQueryDto } from './paged-list-query.dto.js'
 import { EntityDTO } from '@mikro-orm/core'
-import { PageRo } from './page.ro.js'
+import { PagedList } from './paged-list.js'
 
 
-export function PageType<T>(classRef: Type<T>): typeof PageRo<T> {
+export function PagedListType<T>(classRef: Type<T>): typeof PagedList<T> {
   abstract class TypeClassPage {
     @ApiProperty({
       type: () => classRef,
@@ -25,7 +25,7 @@ export function PageType<T>(classRef: Type<T>): typeof PageRo<T> {
     @ValidateNested()
     pagination!: Pagination
 
-    static from<T>(items: T[], total: number, pageQuery?: PageQueryRo): { items: EntityDTO<T>[]; pagination: Pagination } {
+    static from<T>(items: T[], total: number, pageQuery?: PagedListQueryDto): { items: EntityDTO<T>[]; pagination: Pagination } {
       return {
         items: items.map((item) => {
           if (item && typeof item['toObject'] === 'function') return item['toObject']() as EntityDTO<T>
@@ -36,5 +36,5 @@ export function PageType<T>(classRef: Type<T>): typeof PageRo<T> {
     }
   }
 
-  return TypeClassPage as typeof PageRo<T>
+  return TypeClassPage as typeof PagedList<T>
 }

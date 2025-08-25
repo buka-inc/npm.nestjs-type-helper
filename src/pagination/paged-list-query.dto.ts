@@ -5,14 +5,14 @@ import { IsInt, IsOptional, Min } from 'class-validator'
 
 
 @Expose()
-export class PageQueryRo {
+export class PagedListQueryDto {
   @ApiProperty({
     type: 'number',
     description: '每页数量',
     required: false,
   })
   @IsOptional()
-  @ToNumber()
+  @ToNumber({ optional: true })
   @IsInt()
   @Min(1)
   $limit?: number
@@ -23,7 +23,7 @@ export class PageQueryRo {
     required: false,
   })
   @IsOptional()
-  @ToNumber()
+  @ToNumber({ optional: true })
   @IsInt()
   @Min(0)
   $offset?: number

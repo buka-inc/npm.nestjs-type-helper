@@ -1,12 +1,12 @@
 import { EntityDTO } from '@mikro-orm/core'
-import { PageQueryRo } from './page-query.ro'
+import { PagedListQueryDto } from './paged-list-query.dto'
 import { Pagination } from './pagination'
 
-export abstract class PageRo<T> {
+export abstract class PagedList<T> {
   items!: EntityDTO<T>[]
   pagination!: Pagination
 
-  static from<T>(items: T[], total: number, pageQuery?: PageQueryRo): PageRo<T> {
+  static from<T>(items: T[], total: number, pageQuery?: PagedListQueryDto): PagedList<T> {
     return {
       items: items.map((item) => {
         if (item && typeof item['toObject'] === 'function') return item['toObject']() as EntityDTO<T>
