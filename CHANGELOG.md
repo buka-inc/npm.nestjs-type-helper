@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v2.1.0...v2.1.1) (2025-10-30)
+
+
+### Bug Fixes
+
+* wrong export ([4661c2b](https://github.com/buka-inc/npm.nestjs-type-helper/commit/4661c2bc0d558329c16a81fb1c55e3f3917f7f0a))
+
 ## [2.1.0](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v2.0.0...v2.1.0) (2025-10-30)
 
 
