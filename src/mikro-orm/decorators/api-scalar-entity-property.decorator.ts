@@ -161,7 +161,7 @@ export function BigIntProperty(options: ApiScalarEntityPropertyOptions): Propert
     mode = 'string'
   } else if ((meta.type as any) instanceof BigIntType) {
     const metaType = meta.type as unknown as BigIntType
-    mode = metaType.mode === 'string' ? 'string' : 'number'
+    mode = (metaType.mode as any) === 'string' ? 'string' : 'number'
   } else {
     throw new Error(`Unsupported type for BigIntProperty: ${meta.type}`)
   }
