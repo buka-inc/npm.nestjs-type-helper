@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v2.0.0...v2.1.0) (2025-10-30)
+
+
+### Features
+
+* add EntityTransient ([1c8fa4c](https://github.com/buka-inc/npm.nestjs-type-helper/commit/1c8fa4c6e8ff557a2c8abc32b7f87df74d3ad854))
+
 ## [2.0.0](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v1.7.2...v2.0.0) (2025-08-25)
 
 
