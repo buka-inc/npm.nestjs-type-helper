@@ -12,35 +12,12 @@
     "moduleResolution": "node",
     "module": "ESNext",
     "target": "ESNext",
-    "baseUrl": "./",
-    "rootDir": "./",
+    "baseUrl": "./src",
     "paths": {
-      "~/*": [
-        "src/*"
-      ],
-      "~~/*": [
-        "./*"
-      ]
-    },
-    "plugins": [
-      {
-        "transform": "typescript-transform-paths"
-      },
-      {
-        "transform": "typescript-transform-paths",
-        "afterDeclarations": true
-      }
-    ]
+      "~/*": ["./*"],
+      "~~/*": ["../*"]
+    }
   },
-  "exclude": [
-    "node_modules",
-    "dist"
-  ],
-  "include": [
-    "**/*.ts",
-    ".eslintrc.cjs",
-    "jest.config.ts"
-  ],
   "ts-node": {
     "compilerOptions": {
       "module": "CommonJS"
