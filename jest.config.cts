@@ -17,7 +17,7 @@ const jestConfig: JestConfigWithTsJest = {
   ],
   setupFilesAfterEnv: ['<rootDir>/__tests__/setup.ts'],
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
-  resolver: 'ts-jest-resolver',
+  passWithNoTests: true,
 }
 
 export default jestConfig

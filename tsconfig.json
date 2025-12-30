@@ -20,7 +20,8 @@
   },
   "ts-node": {
     "compilerOptions": {
-      "module": "CommonJS"
+      "moduleResolution": "node",
+      "module": "commonjs"
     }
   }
 }
