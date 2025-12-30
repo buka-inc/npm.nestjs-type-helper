@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v2.1.1...v3.0.0) (2025-12-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* @buka/nestjs-type-helper is deprecated and use @buka/nestjs instead.
+
+### Features
+
+* new buka api specification ([82ab3f9](https://github.com/buka-inc/npm.nestjs-type-helper/commit/82ab3f96a763ce4f06854c39c15e016519332940))
+
 ## [2.1.1](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v2.1.0...v2.1.1) (2025-10-30)
 
 
