@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.1](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v3.0.0...v3.0.1) (2025-12-30)
+
+
+### Bug Fixes
+
+* wrong readme alert ([c96e1d1](https://github.com/buka-inc/npm.nestjs-type-helper/commit/c96e1d1d5a6580a1344a3293463f173dc7a02b9b))
+
 ## [3.0.0](https://github.com/buka-inc/npm.nestjs-type-helper/compare/v2.1.1...v3.0.0) (2025-12-30)
 
 
