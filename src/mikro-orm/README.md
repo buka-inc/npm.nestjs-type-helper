@@ -94,7 +94,7 @@ const document = SwaggerModule.createDocument(
 **使用示例**：
 
 ```typescript
-import { TimestampedEntity } from "@buka/nestjs-type-helper";
+import { TimestampedEntity } from "@buka/nestjs-kit";
 
 @Entity()
 export class UserLoginLogEntity extends TimestampedEntity {
@@ -119,7 +119,7 @@ export class UserLoginLogEntity extends TimestampedEntity {
 **使用示例**：
 
 ```typescript
-import { BaseEntity } from "@buka/nestjs-type-helper";
+import { BaseEntity } from "@buka/nestjs-kit";
 
 @Entity()
 export class BookEntity extends BaseEntity {
@@ -140,7 +140,7 @@ export class BookEntity extends BaseEntity {
 **基础用法**：
 
 ```typescript
-import { BaseEntity, EntityProperty } from "@buka/nestjs-type-helper";
+import { BaseEntity, EntityProperty } from "@buka/nestjs-kit";
 
 @Entity()
 export class BookEntity extends BaseEntity {
@@ -173,7 +173,7 @@ export class BookEntity extends BaseEntity {
 <summary>👉 点击查看使用原生 <code>@Property()</code> 需要写多少代码</summary>
 
 ```typescript
-import { BaseEntity } from "@buka/nestjs-type-helper";
+import { BaseEntity } from "@buka/nestjs-kit";
 import { Property } from "@mikro-orm/core";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, MaxLength, IsOptional, IsInt, Min } from "class-validator";
@@ -219,7 +219,7 @@ export enum BookType {
 }
 
 // 2. 在实体中使用
-import { BaseEntity, EntityEnum } from "@buka/nestjs-type-helper";
+import { BaseEntity, EntityEnum } from "@buka/nestjs-kit";
 
 @Entity()
 export class BookEntity extends BaseEntity {
@@ -302,15 +302,15 @@ export class BookEntity extends BaseEntity {
 
 > [!IMPORTANT]
 >
-> `EntityDtoType(entity)` >只能用于继承来自于 `@buka/nestjs-type-helper/mikro-orm` 基类的 `Entity`，
-> 且 `entity` 所有的属性都必须使用来自 `@buka/nestjs-type-helper/mikro-orm` 的装饰器。
+> `EntityDtoType(entity)` >只能用于继承来自于 `@buka/nestjs-kit/mikro-orm` 基类的 `Entity`，
+> 且 `entity` 所有的属性都必须使用来自 `@buka/nestjs-kit/mikro-orm` 的装饰器。
 
 **作用**：基于实体类快速生成 DTO，类似于 `@nestjs/swagger` 的 `PickType`。
 
 **使用示例**：
 
 ```typescript
-import { EntityDto } from "@buka/nestjs-type-helper";
+import { EntityDto } from "@buka/nestjs-kit";
 import { BookEntity } from "./book.entity";
 
 // 完整 DTO（包含所有字段）
@@ -348,7 +348,7 @@ export class UpdateBookDto extends PartialType(CreateBookDto) {}
 import * as path from "path";
 import { PostgreSqlDriver } from "@mikro-orm/postgresql";
 import { Configuration } from "@buka/nestjs-config";
-import { DatabaseConfig } from "@buka/nestjs-type-helper";
+import { DatabaseConfig } from "@buka/nestjs-kit";
 
 const srcDir = path.resolve(__dirname, "../");
 
