@@ -21,7 +21,8 @@
     "dev": "tsup --watch",
     "prepare": "is-ci || husky",
     "prepublishOnly": "npm run build",
-    "test": "jest"
+    "test": "jest",
+    "commit": "cz"
   },
   "keywords": [
     "nestjs",
@@ -64,6 +65,8 @@
     "@types/object-path": "^0.11.4",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
+    "commitizen": "^4.3.1",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.39.1",
     "husky": "^9.1.7",
     "is-ci": "^4.1.0",
