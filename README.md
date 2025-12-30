@@ -1,10 +1,10 @@
 # @buka/nestjs-type-helper
 
-**This Package is Deprecated; Please use @buka/nestjs instead.**
+**This Package is Deprecated; Please use @buka/nestjs-kit instead.**
 
-**This Package is Deprecated; Please use @buka/nestjs instead.**
+**This Package is Deprecated; Please use @buka/nestjs-kit instead.**
 
-**This Package is Deprecated; Please use @buka/nestjs instead.**
+**This Package is Deprecated; Please use @buka/nestjs-kit instead.**
 
 A set of helpers for project of `NestJS` + `MikroORM` + `class-validator` + `class-transformer`.
 The purpose is to reduce duplicate decorators
