@@ -2,7 +2,7 @@
   "name": "@buka/nestjs-type-helper",
   "version": "2.1.1",
   "description": "An easy to use nestjs config module",
-  "packageManager": "pnpm@9.10.0",
+  "packageManager": "pnpm@10.24.0+sha512.01ff8ae71b4419903b65c60fb2dc9d34cf8bb6e06d03bde112ef38f7a34d6904c424ba66bea5cdcf12890230bf39f9580473140ed9c946fef328b6e5238a345a",
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "exports": {
@@ -10,6 +10,10 @@
       "types": "./dist/index.d.ts",
       "require": "./dist/index.js",
       "import": "./dist/index.mjs"
+    },
+    "./plugin": {
+      "types": "./dist/plugin/index.d.ts",
+      "require": "./dist/plugin/index.js"
     }
   },
   "scripts": {
@@ -43,16 +47,18 @@
   },
   "devDependencies": {
     "@buka/class-transformer-extra": "^2.1.4",
-    "@buka/eslint-config": "^3.0.0",
+    "@buka/eslint-config": "^3.0.3",
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
     "@jest/globals": "^30.2.0",
     "@mikro-orm/core": "^6.5.9",
     "@mikro-orm/migrations": "^6.5.9",
     "@nestjs/common": "^11.1.8",
+    "@nestjs/core": "^11.1.11",
     "@nestjs/mapped-types": "^2.1.0",
     "@nestjs/swagger": "^11.2.1",
     "@nestjs/testing": "^11.1.8",
+    "@swc/core": "^1.15.3",
     "@types/express": "^5.0.5",
     "@types/node": "^22.19.0",
     "@types/object-path": "^0.11.4",
@@ -66,13 +72,14 @@
     "ts-jest": "^29.4.5",
     "ts-jest-resolver": "^2.0.1",
     "ts-node": "^10.9.2",
-    "tsc-alias": "^1.8.16",
     "tsup": "^8.5.0",
     "typescript": "^5.9.3"
   },
   "dependencies": {
     "@types/ramda": "^0.31.1",
+    "jsonschema": "^1.5.0",
     "ramda": "^0.32.0",
+    "ts-custom-error": "^3.3.1",
     "type-fest": "^5.2.0"
   },
   "peerDependencies": {
@@ -80,6 +87,7 @@
     "@mikro-orm/core": "^6",
     "@mikro-orm/migrations": "^6",
     "@nestjs/common": "^10 || ^11",
+    "@nestjs/core": "^10 || ^11",
     "@nestjs/mapped-types": "^2",
     "@nestjs/swagger": "^10 || ^11",
     "@types/express": "*",

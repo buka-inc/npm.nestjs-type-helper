@@ -9,9 +9,9 @@
     "noEmitOnError": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "moduleResolution": "node",
-    "module": "ESNext",
-    "target": "ESNext",
+    "moduleResolution": "nodenext",
+    "module": "nodenext",
+    "target": "esnext",
     "baseUrl": "./src",
     "paths": {
       "~/*": ["./*"],

@@ -1,8 +1,8 @@
 on:
   push:
     branches:
-      - master
       - main
+
 name: Release
 
 permissions:
@@ -13,29 +13,43 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
     steps:
       - id: app-token
         uses: actions/create-github-app-token@v1
         with:
           app-id: ${{ vars.BOT_APP_ID }}
           private-key: ${{ secrets.BOT_PRIVATE_KEY }}
+
       - uses: GoogleCloudPlatform/release-please-action@v4
         id: release
         with:
           token: ${{ steps.app-token.outputs.token }}
           release-type: node
-      - if: ${{ steps.release.outputs.release_created }}
-        uses: actions/checkout@v4
-      - if: ${{ steps.release.outputs.release_created }}
-        uses: actions/setup-node@v4
+
+  publish:
+    needs: release
+    runs-on: ubuntu-latest
+    if: ${{ needs.release.outputs.release_created == 'true' }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
         with:
-          node-version-file: ".node-version"
-          registry-url: https://registry.npmjs.org/
-      - if: ${{ steps.release.outputs.release_created }}
+          # node-version-file: ".node-version"
+          node-version: "24" # npm must be >= 11.5.1 to support trusted publish
+          registry-url: https://registry.npmjs.org
+
+      - name: Setup PNPM
         uses: pnpm/action-setup@v4
-      - if: ${{ steps.release.outputs.release_created }}
+        with:
+          run_install: false
+
+      - name: Install Dependencies
         run: pnpm install
-      - if: ${{ steps.release.outputs.release_created }}
-        run: npm publish --provenance --access=public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish to NPM
+        run: npm publish --access=public

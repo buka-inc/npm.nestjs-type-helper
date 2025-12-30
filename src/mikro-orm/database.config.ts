@@ -34,7 +34,7 @@ export class DatabaseConfig {
   @IsString()
   timezone? = '+08:00'
 
-  toMikroOrmOptions(): Options {
+  toMikroOrmOptions(config?: Partial<Options>): Options {
     let options: Options = {
       host: this.host,
       port: this.port,
@@ -64,6 +64,6 @@ export class DatabaseConfig {
       } satisfies Options)
     }
 
-    return options
+    return R.mergeDeepRight(options, config || {})
   }
 }

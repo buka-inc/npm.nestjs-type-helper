@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import * as R from 'ramda'
 import { ModelPropertiesAccessor } from '@nestjs/swagger/dist/services/model-properties-accessor'
 import { DECORATORS } from '@nestjs/swagger/dist/constants'
@@ -17,20 +18,19 @@ const modelPropertiesAccessor = new ModelPropertiesAccessor()
 /**
  * 克隆 @nestjs/swagger Plugin 添加的元数据
  */
-export const cloneSwaggerPluginMetadataFactory = clonePluginMetadataFactory
+// export const cloneSwaggerPluginMetadataFactory = clonePluginMetadataFactory
 
 export function cloneMetadata(target: Function, source: Type<unknown>, keys: string[]): void {
-  cloneSwaggerPluginMetadataFactory(
+  clonePluginMetadataFactory(
     target as Type<unknown>,
     source.prototype,
     (metadata: Record<string, any>) => R.pick(keys, metadata),
   )
 
   for (const propertyKey of keys) {
-    const metadata = getMetadataOfPlugin(source, propertyKey)
+    const metadata = getMetadataOfDecorator(source, propertyKey)
     if (metadata) {
-      const decoratorFactory = ApiProperty(metadata)
-      decoratorFactory(target.prototype, propertyKey)
+      ApiProperty(metadata)(target.prototype, propertyKey)
     }
   }
 }
@@ -46,7 +46,7 @@ export function getMetadataOfDecorator(classRef: Type<any>, propertyKey?: string
   }
 
   const props = modelPropertiesAccessor
-    .getModelProperties(classRef.prototype as any)
+    .getModelProperties(classRef.prototype)
 
   return R.fromPairs(
     props.map((prop) => [
@@ -75,7 +75,7 @@ function getMetadataOfPlugin(classRef: Type<any>, propertyKey?: string): SchemaO
  * 可以利用这个函数，遍历 Dto/Entity 上定义的所有属性，而不需要去实例化一个对象
  */
 export function getMetadata(classRef: Type<any>): Record<string, SchemaObjectMetadata>
-export function getMetadata(classRef: Type<any>, propertyKey: string): SchemaObjectMetadata
+export function getMetadata(classRef: Type<any>, propertyKey: string): SchemaObjectMetadata | undefined
 export function getMetadata(classRef: Type<any>, propertyKey?: string): SchemaObjectMetadata | Record<string, SchemaObjectMetadata> {
   const propsInDecorator = getMetadataOfDecorator(classRef)
   const propsInPlugin = getMetadataOfPlugin(classRef)
@@ -101,4 +101,13 @@ export function getMetadataType(metadata: SchemaObjectMetadata): string | Functi
   }
 
   return metadata.type as (string | Function)
+}
+
+/**
+ * 判断 type 是否是 lazy type function
+ */
+export function isLazyTypeFunc(
+  type: any,
+): type is { type: Function } & Function {
+  return isFunction(type) && type.name == 'type'
 }

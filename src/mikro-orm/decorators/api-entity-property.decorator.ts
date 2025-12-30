@@ -1,12 +1,10 @@
-import { ApiHideProperty, ApiProperty, getSchemaPath } from '@nestjs/swagger'
-import { EntityName, EntityProperty, MetadataStorage, ReferenceKind } from '@mikro-orm/core'
-import { isSubclassOf } from '~/utils/is-subclass-of'
-import { BaseEntityReferenceDto } from '../base-entity-reference.dto'
+import { ApiHideProperty, getSchemaPath } from '@nestjs/swagger'
+import { EntityProperty, MetadataStorage, ReferenceKind } from '@mikro-orm/core'
 import { ApiScalarEntityProperty } from './api-scalar-entity-property.decorator'
-import { BaseEntity } from '../base-entity'
-import { Type } from 'class-transformer'
-import { ValidateNested } from 'class-validator'
-import { PrimaryType } from '../primary-type'
+import { EntityRefType } from '../converters/entity-ref-type/entity-ref-type'
+import { NestedProperty, Property, Relation } from '~/decorators'
+import { Type } from '@nestjs/common'
+
 
 interface ApiEntityPropertyOptions {
   example?: any
@@ -31,42 +29,57 @@ export function ApiEntityProperty<T extends object>(options?: ApiEntityPropertyO
     if (prop.kind === ReferenceKind.SCALAR) {
       ApiScalarEntityProperty({
         meta: prop,
-        validate: true,
         schema: options,
       })(target, propertyKey)
       return
     }
 
-    const getEntity = (): EntityName<any> | undefined => {
+    const getType = (): Type => {
       const ent = prop.entity()
-      if (prop.eager === true) return ent
+      if (prop.eager === true) return ent as Type
 
       if (typeof ent === 'function') {
-        if (isSubclassOf(ent, BaseEntity)) return BaseEntityReferenceDto
-        return PrimaryType(ent as any)
+        return EntityRefType(ent as any)
       }
+
+      return Object
     }
 
     if (prop.kind === ReferenceKind.ONE_TO_ONE || prop.kind === ReferenceKind.MANY_TO_ONE) {
-      Type(() => getEntity() as any || Object)(target, propertyKey)
-      ValidateNested()(target, propertyKey)
-      ApiProperty({
-        description: prop.comment,
-        required: !prop.nullable,
-        type: () => getEntity() || 'object',
+      Property({
+        type: () => getType(),
+        relation: {
+          kind: prop.kind,
+          type: () => getType(),
+        },
+        schema: {
+          description: prop.comment,
+          required: !prop.nullable,
+        },
       })(target, propertyKey)
 
       return
     }
 
     if (prop.kind === ReferenceKind.ONE_TO_MANY || prop.kind === ReferenceKind.MANY_TO_MANY) {
-      Type(() => getEntity() as any || Object)(target, propertyKey)
-      ValidateNested({ each: true })(target, propertyKey)
-      ApiProperty({
-        type: 'array',
-        items: {
-          type: getSchemaPath(() => getEntity() || 'object'),
+      NestedProperty(
+        () => getType(),
+        {
+          each: true,
+          optional: prop.nullable,
+          schema: {
+            description: prop.comment,
+            type: 'array',
+            items: {
+              type: getSchemaPath(() => getType()),
+            },
+          },
         },
+      )(target, propertyKey)
+
+      Relation({
+        kind: prop.kind,
+        type: () => getType(),
       })(target, propertyKey)
       return
     }

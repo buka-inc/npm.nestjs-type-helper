@@ -1,12 +1,13 @@
 import { BigIntType, EntityProperty } from '@mikro-orm/core'
 import { applyDecorators } from '@nestjs/common'
-import { ApiProperty } from '@nestjs/swagger'
-import { IsBoolean, IsCurrency, IsInt, IsISO8601, IsNumber, IsOptional, IsString, MaxLength, MinLength } from 'class-validator'
+import { IsBoolean, IsCurrency, IsInt, IsISO8601, IsNumber, IsString, MaxLength, MinLength } from 'class-validator'
+import { Property } from '~/decorators'
 import { logger } from '~/utils/logger'
+
 
 interface ApiScalarEntityPropertyOptions {
   meta: EntityProperty
-  validate?: boolean
+  unverified?: boolean
   schema?: {
     example?: any
     enumName?: string
@@ -75,19 +76,22 @@ function getEnumOptions(options: ApiScalarEntityPropertyOptions): { enum?: (stri
 function VarcharProperty(length: number | undefined, options: ApiScalarEntityPropertyOptions): PropertyDecorator {
   const decorators: PropertyDecorator[] = []
 
-  if (options.validate) {
+  if (!options.unverified) {
     decorators.push(IsString())
     if (length) decorators.push(MaxLength(length))
-    if (options.meta.nullable) decorators.push(IsOptional())
   }
 
-  decorators.push(ApiProperty({
-    type: 'string',
-    maxLength: length,
-    ...(options.schema || {}),
-    ...getEnumOptions(options),
-    required: !options.meta.nullable,
-    description: options.meta.comment,
+  decorators.push(Property({
+    type: () => String,
+    optional: options.meta.nullable,
+    schema: {
+      type: 'string',
+      maxLength: length,
+      ...(options.schema || {}),
+      ...getEnumOptions(options),
+      required: !options.meta.nullable,
+      description: options.meta.comment,
+    },
   }))
 
   return applyDecorators(...decorators)
@@ -96,20 +100,23 @@ function VarcharProperty(length: number | undefined, options: ApiScalarEntityPro
 function CharProperty(length: number | undefined, options: ApiScalarEntityPropertyOptions): PropertyDecorator {
   const decorators: PropertyDecorator[] = []
 
-  if (options.validate) {
+  if (!options.unverified) {
     decorators.push(IsString())
     if (length) decorators.push(MaxLength(length), MinLength(length))
-    if (options.meta.nullable) decorators.push(IsOptional())
   }
 
-  decorators.push(ApiProperty({
-    type: 'string',
-    maxLength: length,
-    minimum: length,
-    ...(options.schema || {}),
-    ...getEnumOptions(options),
-    required: !options.meta.nullable,
-    description: options.meta.comment,
+  decorators.push(Property({
+    type: () => String,
+    optional: options.meta.nullable,
+    schema: {
+      type: 'string',
+      maxLength: length,
+      minimum: length,
+      ...(options.schema || {}),
+      ...getEnumOptions(options),
+      required: !options.meta.nullable,
+      description: options.meta.comment,
+    },
   }))
 
   return applyDecorators(...decorators)
@@ -117,17 +124,20 @@ function CharProperty(length: number | undefined, options: ApiScalarEntityProper
 
 function TextProperty(options: ApiScalarEntityPropertyOptions): PropertyDecorator {
   const decorators: PropertyDecorator[] = []
-  if (options.validate) {
+  if (!options.unverified) {
     decorators.push(IsString())
-    if (options.meta.nullable) decorators.push(IsOptional())
   }
 
-  decorators.push(ApiProperty({
-    type: 'string',
-    ...(options.schema || {}),
-    ...getEnumOptions(options),
-    required: !options.meta.nullable,
-    description: options.meta.comment,
+  decorators.push(Property({
+    type: () => String,
+    optional: options.meta.nullable,
+    schema: {
+      type: 'string',
+      ...(options.schema || {}),
+      ...getEnumOptions(options),
+      required: !options.meta.nullable,
+      description: options.meta.comment,
+    },
   }))
 
   return applyDecorators(...decorators)
@@ -137,17 +147,20 @@ function TextProperty(options: ApiScalarEntityPropertyOptions): PropertyDecorato
 export function MoneyProperty(options: ApiScalarEntityPropertyOptions): PropertyDecorator {
   const decorators: PropertyDecorator[] = []
 
-  if (options.validate) {
+  if (!options.unverified) {
     decorators.push(IsCurrency({ symbol: '' }))
-    if (options.meta.nullable) decorators.push(IsOptional())
   }
 
-  decorators.push(ApiProperty({
-    type: 'string',
-    format: 'money',
-    ...(options.schema || {}),
-    required: !options.meta.nullable,
-    description: options.meta.comment,
+  decorators.push(Property({
+    type: () => String,
+    optional: options.meta.nullable,
+    schema: {
+      type: 'string',
+      format: 'money',
+      ...(options.schema || {}),
+      required: !options.meta.nullable,
+      description: options.meta.comment,
+    },
   }))
 
   return applyDecorators(...decorators)
@@ -168,27 +181,38 @@ export function BigIntProperty(options: ApiScalarEntityPropertyOptions): Propert
 
   const decorators: PropertyDecorator[] = []
 
-  if (options.validate) {
-    decorators.push(IsString())
-    if (options.meta.nullable) decorators.push(IsOptional())
-  }
-
   if (mode === 'string') {
-    decorators.push(ApiProperty({
-      type: 'string',
-      ...(options.schema || {}),
-      ...getEnumOptions(options),
-      required: !options.meta.nullable,
-      description: options.meta.comment,
+    if (!options.unverified) {
+      decorators.push(IsString())
+    }
+
+    decorators.push(Property({
+      type: () => String,
+      optional: options.meta.nullable,
+      schema: {
+        type: 'string',
+        ...(options.schema || {}),
+        ...getEnumOptions(options),
+        required: !options.meta.nullable,
+        description: options.meta.comment,
+      },
     }))
   } else {
-    decorators.push(ApiProperty({
-      type: 'integer',
-      format: 'int64',
-      ...(options.schema || {}),
-      ...getEnumOptions(options),
-      required: !options.meta.nullable,
-      description: options.meta.comment,
+    if (!options.unverified) {
+      decorators.push(IsInt())
+    }
+
+    decorators.push(Property({
+      type: () => Number,
+      optional: options.meta.nullable,
+      schema: {
+        type: 'integer',
+        format: 'int64',
+        ...(options.schema || {}),
+        ...getEnumOptions(options),
+        required: !options.meta.nullable,
+        description: options.meta.comment,
+      },
     }))
   }
 
@@ -199,19 +223,23 @@ export function BigIntProperty(options: ApiScalarEntityPropertyOptions): Propert
 export function IntProperty(options: ApiScalarEntityPropertyOptions): PropertyDecorator {
   const decorators: PropertyDecorator[] = []
 
-  if (options.validate) {
+  if (!options.unverified) {
     decorators.push(IsInt())
-    if (options.meta.nullable) decorators.push(IsOptional())
+    // if (options.meta.nullable) decorators.push(IsOptional())
   }
 
-  decorators.push(ApiProperty({
-    type: 'integer',
-    minimum: options.meta.unsigned ? 0 : -2147483647,
-    maximum: options.meta.unsigned ? 4294967295 : 2147483647,
-    ...(options.schema || {}),
-    ...getEnumOptions(options),
-    required: !options.meta.nullable,
-    description: options.meta.comment,
+  decorators.push(Property({
+    type: () => Number,
+    optional: options.meta.nullable,
+    schema: {
+      type: 'integer',
+      minimum: options.meta.unsigned ? 0 : -2147483647,
+      maximum: options.meta.unsigned ? 4294967295 : 2147483647,
+      ...(options.schema || {}),
+      ...getEnumOptions(options),
+      required: !options.meta.nullable,
+      description: options.meta.comment,
+    },
   }))
 
   return applyDecorators(...decorators)
@@ -220,19 +248,23 @@ export function IntProperty(options: ApiScalarEntityPropertyOptions): PropertyDe
 export function TinyintProperty(options: ApiScalarEntityPropertyOptions): PropertyDecorator {
   const decorators: PropertyDecorator[] = []
 
-  if (options.validate) {
+  if (!options.unverified) {
     decorators.push(IsInt())
-    if (options.meta.nullable) decorators.push(IsOptional())
+    // if (options.meta.nullable) decorators.push(IsOptional())
   }
 
-  decorators.push(ApiProperty({
-    type: 'integer',
-    minimum: options.meta.unsigned ? 0 : -128,
-    maximum: options.meta.unsigned ? 255 : 127,
-    ...(options.schema || {}),
-    ...getEnumOptions(options),
-    required: !options.meta.nullable,
-    description: options.meta.comment,
+  decorators.push(Property({
+    type: () => Number,
+    optional: options.meta.nullable,
+    schema: {
+      type: 'integer',
+      minimum: options.meta.unsigned ? 0 : -128,
+      maximum: options.meta.unsigned ? 255 : 127,
+      ...(options.schema || {}),
+      ...getEnumOptions(options),
+      required: !options.meta.nullable,
+      description: options.meta.comment,
+    },
   }))
 
   return applyDecorators(...decorators)
@@ -241,19 +273,23 @@ export function TinyintProperty(options: ApiScalarEntityPropertyOptions): Proper
 export function DoubleProperty(options: ApiScalarEntityPropertyOptions): PropertyDecorator {
   const decorators: PropertyDecorator[] = []
 
-  if (options.validate) {
+  if (!options.unverified) {
     decorators.push(IsNumber())
-    if (options.meta.nullable) decorators.push(IsOptional())
+    // if (options.meta.nullable) decorators.push(IsOptional())
   }
 
-  decorators.push(ApiProperty({
-    type: 'number',
-    format: 'double',
-    minimum: options.meta.unsigned ? 0 : undefined,
-    ...(options.schema || {}),
-    ...getEnumOptions(options),
-    required: !options.meta.nullable,
-    description: options.meta.comment,
+  decorators.push(Property({
+    type: () => Number,
+    optional: options.meta.nullable,
+    schema: {
+      type: 'number',
+      format: 'double',
+      minimum: options.meta.unsigned ? 0 : undefined,
+      ...(options.schema || {}),
+      ...getEnumOptions(options),
+      required: !options.meta.nullable,
+      description: options.meta.comment,
+    },
   }))
 
   return applyDecorators(...decorators)
@@ -262,21 +298,25 @@ export function DoubleProperty(options: ApiScalarEntityPropertyOptions): Propert
 export function DecimalProperty(options: ApiScalarEntityPropertyOptions): PropertyDecorator {
   const decorators: PropertyDecorator[] = []
 
-  if (options.validate) {
+  if (!options.unverified) {
     if (options.meta.scale) decorators.push(IsNumber({ maxDecimalPlaces: options.meta.scale }))
     else decorators.push(IsNumber())
 
-    if (options.meta.nullable) decorators.push(IsOptional())
+    // if (options.meta.nullable) decorators.push(IsOptional())
   }
 
-  decorators.push(ApiProperty({
-    type: 'number',
-    format: 'double',
-    minimum: options.meta.unsigned ? 0 : undefined,
-    ...(options.schema || {}),
-    ...getEnumOptions(options),
-    required: !options.meta.nullable,
-    description: options.meta.comment,
+  decorators.push(Property({
+    type: () => Number,
+    optional: options.meta.nullable,
+    schema: {
+      type: 'number',
+      format: 'double',
+      minimum: options.meta.unsigned ? 0 : undefined,
+      ...(options.schema || {}),
+      ...getEnumOptions(options),
+      required: !options.meta.nullable,
+      description: options.meta.comment,
+    },
   }))
 
   return applyDecorators(...decorators)
@@ -285,17 +325,21 @@ export function DecimalProperty(options: ApiScalarEntityPropertyOptions): Proper
 export function DatetimeProperty(options: ApiScalarEntityPropertyOptions): PropertyDecorator {
   const decorators: PropertyDecorator[] = []
 
-  if (options.validate) {
+  if (!options.unverified) {
     decorators.push(IsISO8601())
-    if (options.meta.nullable) decorators.push(IsOptional())
+    // if (options.meta.nullable) decorators.push(IsOptional())
   }
 
-  decorators.push(ApiProperty({
-    type: 'string',
-    format: 'date-time',
-    ...(options.schema || {}),
-    required: !options.meta.nullable,
-    description: options.meta.comment,
+  decorators.push(Property({
+    type: () => Date,
+    optional: options.meta.nullable,
+    schema: {
+      type: 'string',
+      format: 'date-time',
+      ...(options.schema || {}),
+      required: !options.meta.nullable,
+      description: options.meta.comment,
+    },
   }))
 
   return applyDecorators(...decorators)
@@ -304,16 +348,20 @@ export function DatetimeProperty(options: ApiScalarEntityPropertyOptions): Prope
 export function BooleanProperty(options: ApiScalarEntityPropertyOptions): PropertyDecorator {
   const decorators: PropertyDecorator[] = []
 
-  if (options.validate) {
+  if (!options.unverified) {
     decorators.push(IsBoolean())
-    if (options.meta.nullable) decorators.push(IsOptional())
+    // if (options.meta.nullable) decorators.push(IsOptional())
   }
 
-  decorators.push(ApiProperty({
-    type: 'boolean',
-    ...(options.schema || {}),
-    required: !options.meta.nullable,
-    description: options.meta.comment,
+  decorators.push(Property({
+    type: () => Boolean,
+    optional: options.meta.nullable,
+    schema: {
+      type: 'boolean',
+      ...(options.schema || {}),
+      required: !options.meta.nullable,
+      description: options.meta.comment,
+    },
   }))
 
   return applyDecorators(...decorators)

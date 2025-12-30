@@ -11,7 +11,11 @@ import * as classTransformer from 'class-transformer/cjs/storage'
 export function cloneTransformMetadata(target: Function, source: Type<unknown>, keys: string[]): void {
   for (const propertyKey of keys) {
     const transformerMetadata = getTransformMetadata(source, propertyKey)
-    if (transformerMetadata) setTransformMetadata(target as Type<any>, propertyKey, transformerMetadata)
+    if (transformerMetadata) {
+      for (const metadata of transformerMetadata) {
+        setTransformMetadata(target as Type<any>, propertyKey, metadata)
+      }
+    }
   }
 }
 
@@ -19,26 +23,40 @@ export function copyTransformMetadata(
   { source, propertyKey: sourcePropertyKey }: { source: Type<any>; propertyKey: string },
   { target, propertyKey: targetPropertyKey }: { target: Type<any>; propertyKey: string },
 ): void {
-  const metadata = getTransformMetadata(source, sourcePropertyKey)
-  if (!metadata) return
+  const metadataList = getTransformMetadata(source, sourcePropertyKey)
+  if (!metadataList) return
 
-  setTransformMetadata(target, targetPropertyKey, metadata)
+  for (const metadata of metadataList) {
+    setTransformMetadata(target, targetPropertyKey, metadata)
+  }
 }
 
-export function getTransformMetadata(classRef: Type<any>, prop: string): any[] | undefined {
+
+interface TransformMetadata {
+  target: Function
+  propertyName: string
+  transformFn: (params: any) => any
+  options?: Record<string, any>
+}
+
+export function getTransformMetadata(classRef: Type<any>): Map<string, TransformMetadata[]> | undefined
+export function getTransformMetadata(classRef: Type<any>, prop: string): TransformMetadata[] | undefined
+export function getTransformMetadata(classRef: Type<any>, prop?: string): Map<string, TransformMetadata[]> | TransformMetadata[] | undefined {
   const metadataStorage = classTransformer.defaultMetadataStorage
   const metadataMap = metadataStorage['_transformMetadatas']
 
-  const classMetadata = metadataMap.get(classRef)
+  const classMetadata: Map<string, TransformMetadata[]> | undefined = metadataMap.get(classRef)
   if (!classMetadata) return
 
-  const propertyMetadata = classMetadata.get(prop)
+  if (!prop) return classMetadata
 
-  return (Array.isArray(propertyMetadata) ? propertyMetadata : [propertyMetadata])
+  const propertyMetadata = classMetadata.get(prop)
+  if (!propertyMetadata) return undefined
+  return Array.isArray(propertyMetadata) ? propertyMetadata : [propertyMetadata]
 }
 
 
-export function setTransformMetadata(classRef: Type<any>, prop: string, metadata: any): void {
+export function setTransformMetadata(classRef: Type<any>, prop: string, metadata: TransformMetadata): void {
   const meta = { ...metadata, target: classRef, propertyName: prop }
 
   const metadataStorage = classTransformer.defaultMetadataStorage
@@ -50,15 +68,20 @@ export function setTransformMetadata(classRef: Type<any>, prop: string, metadata
     const propertyMetadata = classMetadata.get(prop)
 
     if (propertyMetadata) {
-      classMetadata.set(propertyMetadata, propertyMetadata.concat(meta))
+      classMetadata.set(prop, propertyMetadata.concat(meta))
     } else {
-      classMetadata.set(propertyMetadata, meta)
+      classMetadata.set(prop, [meta])
     }
   } else {
-    metadataMap.set(classRef, new Map([[prop, meta]]))
+    metadataMap.set(classRef, new Map([[prop, [meta]]]))
   }
 }
 
+
+export function hasTransformMetadata(classRef: Type<any>, prop: string): boolean {
+  const metadata = getTransformMetadata(classRef, prop)
+  return !!metadata && metadata.length > 0
+}
 
 // ---------------------------------- @Type() ----------------------------------
 

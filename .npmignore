@@ -1,14 +1,12 @@
 /.github
 /.husky
-/build
-/coverage
-/doc
 /src
-
 /__tests__
-/__mocks__
 
 .commitlintrc.yml
-.eslintrc.cjs
-.gitignore
-jest.config.ts
+.eslint.config.mjs
+.node-version
+.jest.config.cts
+tsup.config.ts
+tsconfig.json
+tsconfig.*.json

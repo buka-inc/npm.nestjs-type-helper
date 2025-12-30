@@ -1,4 +1,4 @@
-import { Property, PropertyOptions } from '@mikro-orm/core'
+import { Property as OrmProperty, PropertyOptions } from '@mikro-orm/core'
 import { ApiPropertyOptions } from '@nestjs/swagger'
 import { ApiEntityProperty } from './api-entity-property.decorator'
 import { ColumnTypeRequired } from '../types/column-type-required'
@@ -10,7 +10,7 @@ export function EntityProperty<T extends object>(
   return (target, propertyKey) => {
     if (typeof propertyKey !== 'string') throw new TypeError('@EntityProperty() can only be used on string property')
 
-    Property(options)(target, propertyKey)
+    OrmProperty(options)(target, propertyKey)
     ApiEntityProperty({ example: options?.example })(target, propertyKey)
   }
 }
