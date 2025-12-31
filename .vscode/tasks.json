@@ -2,15 +2,16 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "type": "npm",
-      "script": "dev",
-      "problemMatcher": [],
-      "label": "watch",
+      "type": "shell",
+      "command": "pnpm dev",
+      "isBackground": true,
+      "problemMatcher": ["$tsup-watch", "$tsup-dts-watch"],
+      "label": "tsup:watch",
       "detail": "tsup --watch",
+      "group": "build",
       "presentation": {
         "reveal": "silent",
-        "panel": "dedicated",
-        "clear": true
+        "panel": "dedicated"
       },
       "runOptions": {
         "instanceLimit": 1,
