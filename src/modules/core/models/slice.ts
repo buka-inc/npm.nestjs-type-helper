@@ -1,4 +1,4 @@
-import { Cursor } from '@mikro-orm/core'
+import { Cursor, Loaded } from '@mikro-orm/core'
 import { IOffsetPageParameters } from '../types'
 import { OffsetPagination } from './offset-pagination'
 import { CursorPagination } from './cursor-pagination'
@@ -26,9 +26,14 @@ export class Slice<T extends object> {
     return new Slice<T>(data, pagination)
   }
 
-  static fromCursor<T extends object>(cursor: Cursor<T>): Slice<T> {
+  static fromCursor<
+    T extends object,
+    Hint extends string = never,
+    Fields extends string = never,
+    Excludes extends string = never,
+  >(cursor: Cursor<T, Hint, Fields, Excludes>): Slice<Loaded<T, Hint, Fields, Excludes>> {
     const pagination = new CursorPagination(cursor)
-    return new Slice<T>(cursor.items, pagination)
+    return new Slice<Loaded<T, Hint, Fields, Excludes>>(cursor.items, pagination)
   }
 
   map<R extends object>(fn: (item: T, index: number) => R): Slice<R> {
