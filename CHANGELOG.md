@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.4.7](https://github.com/buka-ltd/npm.nestjs-kit/compare/v4.4.6...v4.4.7) (2026-07-05)
+
+
+### Bug Fixes
+
+* 修复Slice未正确处理Cursor泛型的问题 ([85414ee](https://github.com/buka-ltd/npm.nestjs-kit/commit/85414eee102f309bdcc91325d98be5b9ff93bdda))
+
 ## [4.4.6](https://github.com/buka-ltd/npm.nestjs-kit/compare/v4.4.5...v4.4.6) (2026-06-30)
 
 
