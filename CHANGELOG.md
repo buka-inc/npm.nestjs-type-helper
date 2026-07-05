@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.4.9](https://github.com/buka-ltd/npm.nestjs-kit/compare/v4.4.8...v4.4.9) (2026-07-05)
+
+
+### Bug Fixes
+
+* 修复collection生成的filter query的swagger错误 ([810c3ef](https://github.com/buka-ltd/npm.nestjs-kit/commit/810c3efef10204462be94b9075a07f9e8c983058))
+
 ## [4.4.8](https://github.com/buka-ltd/npm.nestjs-kit/compare/v4.4.7...v4.4.8) (2026-07-05)
 
 
