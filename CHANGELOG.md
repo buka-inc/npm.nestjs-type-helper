@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.4.8](https://github.com/buka-ltd/npm.nestjs-kit/compare/v4.4.7...v4.4.8) (2026-07-05)
+
+
+### Bug Fixes
+
+* 修复cursor格式无法获取首页的问题 ([f13c11d](https://github.com/buka-ltd/npm.nestjs-kit/commit/f13c11d8088f432a408209ac7d7cf97259521c87))
+
 ## [4.4.7](https://github.com/buka-ltd/npm.nestjs-kit/compare/v4.4.6...v4.4.7) (2026-07-05)
 
 
