@@ -72,10 +72,10 @@ export class BukaPageQueryValidationPipe implements PipeTransform {
           throw new BadRequestException(mixedNextAndLastCursorError)
         }
 
-        const after = value.page.after
+        const after: string = value.page.after ?? ''
         const first = parseInt(value.page.first, 10)
 
-        if (typeof after !== 'string') {
+        if (value.page.after !== undefined && typeof value.page.after !== 'string') {
           throw new BadRequestException('Invalid page query: after must be a string.')
         }
 
@@ -95,10 +95,10 @@ export class BukaPageQueryValidationPipe implements PipeTransform {
           throw new BadRequestException(mixedNextAndLastCursorError)
         }
 
-        const before = value.page.before
+        const before: string = value.page.before ?? ''
         const last = parseInt(value.page.last, 10)
 
-        if (typeof before !== 'string') {
+        if (value.page.before !== undefined && typeof value.page.before !== 'string') {
           throw new BadRequestException('Invalid page query: before must be a string.')
         }
 

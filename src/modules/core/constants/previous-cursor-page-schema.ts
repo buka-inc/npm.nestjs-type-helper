@@ -4,6 +4,6 @@ export const PreviousCursorPageSchema = {
     before: { type: 'string' },
     last: { type: 'number' },
   },
-  required: ['before', 'last'],
+  required: ['last'],
   additionalProperties: false,
 }

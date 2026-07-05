@@ -5,12 +5,13 @@ export type IOffsetPageParameters = {
 
 export type INextCursorPageParameters = {
   first: number
-  after: string
+  /** 首次加载无需传递 cursor */
+  after?: string
 }
 
 export type IPreviousCursorPageParameters = {
   last: number
-  before: string
+  before?: string
 }
 
 

@@ -4,6 +4,6 @@ export const NextCursorPageSchema = {
     after: { type: 'string' },
     first: { type: 'number' },
   },
-  required: ['after', 'first'],
+  required: ['first'],
   additionalProperties: false,
 }
