@@ -28,13 +28,19 @@ function getObjectSchema(classRef: Class<any>): SchemaObject {
 
     if (isRelation) {
       if (isCollection) {
-        // some, none, every
+        // some, none, every — 包裹在字段名下，与验证类结构保持一致
         const sub = getObjectSchema(propertyMetadata.association!.type() as Class<any>)
         const operators = getCollectionOperators(classRef, propertyKey)
+        const wrapper: SchemaObject = {
+          type: 'object',
+          properties: {},
+          additionalProperties: false,
+        }
 
         for (const operator of operators) {
-          properties[operator] = sub
+          wrapper.properties![operator] = sub
         }
+        properties[propertyKey] = wrapper
       } else {
         const sub = getObjectSchema(propertyMetadata.association!.type() as Class<any>)
         properties[propertyKey] = sub
