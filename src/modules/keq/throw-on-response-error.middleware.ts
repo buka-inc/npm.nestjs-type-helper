@@ -30,31 +30,40 @@ export function throwOnResponseError(options?: ThrowOnResponseErrorOptions): Keq
       throw createExceptionByStatusCode(response)
     }
 
-    const body = await response.json()
-    if (body !== null && typeof body === 'object' && 'error' in body) {
-      try {
-        const { error } = body as { error: { code: string; message: string; details: ExceptionDetail[] } }
-        const exceptionOptions: BukaRequestExceptionOptions = {
-          code: error.code,
-          details: error.details,
-          response,
-          fatal: [401, 403, 404].includes(response.status),
-        }
+    let body: unknown
+    try {
+      body = await response.json()
+    } catch (err) {
+      if (debug) {
+        logger.debug('响应体 JSON 解析失败，降级为状态码异常', err instanceof Error ? err.stack : err)
+      }
+      throw createExceptionByStatusCode(response)
+    }
 
-        if (errorDispatchers && error.code in errorDispatchers) {
+    if (body !== null && typeof body === 'object' && 'error' in body) {
+      const { error } = body as { error: { code: string; message: string; details: ExceptionDetail[] } }
+      const exceptionOptions: BukaRequestExceptionOptions = {
+        code: error.code,
+        details: error.details,
+        response,
+        fatal: [401, 403, 404].includes(response.status),
+      }
+
+      if (errorDispatchers && error.code in errorDispatchers) {
+        try {
           const ExceptionClass = errorDispatchers[error.code]
           throw new ExceptionClass(response.status, error.message, exceptionOptions)
-        }
-
-        throw new BukaRequestException(response.status, error.message, exceptionOptions)
-      } catch (caught) {
-        if (debug) {
-          logger.debug(
-            '解析响应错误体失败，降级为通用异常',
-            caught instanceof Error ? caught.stack : caught,
-          )
+        } catch (caught) {
+          if (debug) {
+            logger.debug(
+              '自定义异常派发失败，降级为 BukaRequestException',
+              caught instanceof Error ? caught.stack : caught,
+            )
+          }
         }
       }
+
+      throw new BukaRequestException(response.status, error.message, exceptionOptions)
     }
 
     throw createExceptionByStatusCode(response)
