@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.4.10](https://github.com/buka-ltd/npm.nestjs-kit/compare/v4.4.9...v4.4.10) (2026-07-06)
+
+
+### Bug Fixes
+
+* 修复Keq处理错误信息丢失错误信息的问题 ([8a5f353](https://github.com/buka-ltd/npm.nestjs-kit/commit/8a5f353ff97a8ac4aff18b1ee3e015b503abc9e7))
+
 ## [4.4.9](https://github.com/buka-ltd/npm.nestjs-kit/compare/v4.4.8...v4.4.9) (2026-07-05)
 
 
