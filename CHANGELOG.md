@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.4.11](https://github.com/buka-ltd/npm.nestjs-kit/compare/v4.4.10...v4.4.11) (2026-07-27)
+
+
+### Bug Fixes
+
+* should export IntersectionType ([350af46](https://github.com/buka-ltd/npm.nestjs-kit/commit/350af460f2aa45700f68a7ea0fe224fff2735d8e))
+* 修复QueryType的循环引用问题 ([c94d110](https://github.com/buka-ltd/npm.nestjs-kit/commit/c94d11008eccadee3c6cff02fd1a71b1a2e24faa))
+
 ## [4.4.10](https://github.com/buka-ltd/npm.nestjs-kit/compare/v4.4.9...v4.4.10) (2026-07-06)
 
 
