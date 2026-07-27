@@ -7,7 +7,7 @@ import { SchemaObject } from '~/swagger-patcher/swagger-patcher'
 import { ModelRegister } from '../../decorators'
 
 
-function getObjectSchema(classRef: Class<any>): SchemaObject {
+function getObjectSchema(classRef: Class<any>, visited: WeakSet<Class<any>> = new WeakSet()): SchemaObject {
   const properties = {}
   const requiredKeys: string[] = []
   const schema: SchemaObject = {
@@ -15,6 +15,8 @@ function getObjectSchema(classRef: Class<any>): SchemaObject {
     properties,
     additionalProperties: false,
   }
+
+  visited.add(classRef)
 
   for (const propertyKey of ModelRegister.getModelPropertyKeys(classRef)) {
     if (typeof propertyKey !== 'string') continue
@@ -27,9 +29,16 @@ function getObjectSchema(classRef: Class<any>): SchemaObject {
     if (!isOptional) requiredKeys.push(propertyKey)
 
     if (isRelation) {
+      const relationClassRef = propertyMetadata.association!.type() as Class<any>
+
+      // 防止循环引用导致无限递归
+      if (visited.has(relationClassRef)) {
+        continue
+      }
+
       if (isCollection) {
         // some, none, every — 包裹在字段名下，与验证类结构保持一致
-        const sub = getObjectSchema(propertyMetadata.association!.type() as Class<any>)
+        const sub = getObjectSchema(relationClassRef, visited)
         const operators = getCollectionOperators(classRef, propertyKey)
         const wrapper: SchemaObject = {
           type: 'object',
@@ -42,7 +51,7 @@ function getObjectSchema(classRef: Class<any>): SchemaObject {
         }
         properties[propertyKey] = wrapper
       } else {
-        const sub = getObjectSchema(propertyMetadata.association!.type() as Class<any>)
+        const sub = getObjectSchema(relationClassRef, visited)
         properties[propertyKey] = sub
       }
     } else {

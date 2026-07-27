@@ -80,9 +80,11 @@ function createFilterQueryPropertyClassRef(classRef: Class<any>, propertyKey: st
   return propertyClass
 }
 
-function createFilterQueryObjectClassRef(classRef: Class<any>): Class<any> {
+function createFilterQueryObjectClassRef(classRef: Class<any>, visited: WeakSet<Class<any>> = new WeakSet()): Class<any> {
   class FilterQueryObjectClass {}
   ModelRegister.addModel(FilterQueryObjectClass)
+
+  visited.add(classRef)
 
   for (const propertyKey of ModelRegister.getModelPropertyKeys(classRef)) {
     if (typeof propertyKey !== 'string') continue
@@ -93,12 +95,19 @@ function createFilterQueryObjectClassRef(classRef: Class<any>): Class<any> {
     const isOptional = !!propertyMetadata?.optional
 
     if (isRelation) {
+      const relationClassRef = propertyMetadata.association!.type() as Class<any>
+
+      // 防止循环引用导致无限递归（如 LessonAttendance → lesson → Lesson → attendances → LessonAttendance）
+      if (visited.has(relationClassRef)) {
+        continue
+      }
+
       if (isCollection) {
         // some, none, every
         class FilterQueryCollectionClass {}
         ModelRegister.addModel(FilterQueryCollectionClass)
 
-        const sub = createFilterQueryObjectClassRef(propertyMetadata.association!.type() as Class<any>)
+        const sub = createFilterQueryObjectClassRef(relationClassRef, visited)
         const operators = getCollectionOperators(classRef, propertyKey)
 
         for (const operator of operators) {
@@ -112,7 +121,7 @@ function createFilterQueryObjectClassRef(classRef: Class<any>): Class<any> {
         Composite({ type: () => FilterQueryCollectionClass, optional: isOptional })(FilterQueryObjectClass.prototype, propertyKey)
         if (!isOptional) HasAnyKey(operators)(FilterQueryObjectClass.prototype, propertyKey)
       } else {
-        const sub = createFilterQueryObjectClassRef(propertyMetadata.association!.type() as Class<any>)
+        const sub = createFilterQueryObjectClassRef(relationClassRef, visited)
         Composite({ type: () => sub, optional: isOptional })(FilterQueryObjectClass.prototype, propertyKey)
       }
     } else {

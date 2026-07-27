@@ -41,12 +41,13 @@ export function ManyToOne<Target extends object, Owner extends object>(
     }
 
     const type = (): Type => resolveEntityType(entityRef, resolvedOptions?.eager)
+    const fullEntityType = (): Type => resolveEntityType(entityRef, true)
 
     Composite({
       type,
       association: {
         kind: 'm:1',
-        type,
+        type: fullEntityType,
       },
       schema: {
         description: resolvedOptions?.comment,

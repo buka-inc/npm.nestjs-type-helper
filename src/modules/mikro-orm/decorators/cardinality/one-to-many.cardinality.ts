@@ -32,6 +32,7 @@ export function OneToMany<Target extends object, Owner extends object>(options: 
     const entityRef = options.entity
 
     const type = (): Type => resolveEntityType(entityRef, options.eager)
+    const fullEntityType = (): Type => resolveEntityType(entityRef, true)
 
     List({
       type,
@@ -39,7 +40,7 @@ export function OneToMany<Target extends object, Owner extends object>(options: 
       lazy: options.eager !== true,
       association: {
         kind: '1:m',
-        type,
+        type: fullEntityType,
       },
       schema: {
         description: options.comment,
