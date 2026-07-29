@@ -87,8 +87,20 @@ export class ModelRegister {
    * ```
    */
   static getModelPropertyKeys(target: Class<any>): (string | symbol)[] {
-    const metadata = this.getModel(target)
-    return metadata ? metadata.propertyKeys : []
+    const keys = new Set<string | symbol>()
+    let current: Class<any> | null = target
+
+    while (current && current !== Object) {
+      const metadata = this.getModel(current)
+      if (metadata) {
+        for (const key of metadata.propertyKeys) {
+          keys.add(key)
+        }
+      }
+      current = Object.getPrototypeOf(current.prototype)?.constructor as Class<any> | null ?? null
+    }
+
+    return Array.from(keys)
   }
 
   static getProperties(target: Class<any>): PropertyMetadata[] {
