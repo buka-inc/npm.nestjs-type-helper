@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.4.13](https://github.com/buka-ltd/npm.nestjs-kit/compare/v4.4.12...v4.4.13) (2026-08-09)
+
+
+### Bug Fixes
+
+* 修复FilterQuery对普通object和array的类型推导不正确的问题 ([0d7346d](https://github.com/buka-ltd/npm.nestjs-kit/commit/0d7346dc024b8e2684fc39f89c1652e6050d6bbb))
+
 ## [4.4.12](https://github.com/buka-ltd/npm.nestjs-kit/compare/v4.4.11...v4.4.12) (2026-08-09)
 
 
