@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.4.12](https://github.com/buka-ltd/npm.nestjs-kit/compare/v4.4.11...v4.4.12) (2026-08-09)
+
+
+### Bug Fixes
+
+* 修复collection类型处理filter错误 ([1896dc8](https://github.com/buka-ltd/npm.nestjs-kit/commit/1896dc8770d2f6bf2bece9f076dd78a6a38961f4))
+* 修复getModelPropertyKeys未遍历原型链导致父类属性丢失 ([a4f7dee](https://github.com/buka-ltd/npm.nestjs-kit/commit/a4f7dee73a99ba4d331712572ecb3b1cfca7c847))
+
 ## [4.4.11](https://github.com/buka-ltd/npm.nestjs-kit/compare/v4.4.10...v4.4.11) (2026-07-27)
 
 
