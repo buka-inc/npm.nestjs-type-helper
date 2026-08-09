@@ -1,5 +1,5 @@
 import * as R from 'ramda'
-import type { IFilterQueryObject, IFilterQuery } from './types'
+import type { IObjectOperator, IFilterQuery } from './types'
 import * as ClassValidatorUtils from '~/utils/class-validator-utils'
 import * as ClassTransformerUtils from '~/utils/class-transformer-utils'
 import { getFilterQueryOperators } from './decorators'
@@ -124,6 +124,26 @@ function createFilterQueryObjectClassRef(classRef: Class<any>, visited: WeakSet<
         const sub = createFilterQueryObjectClassRef(relationClassRef, visited)
         Composite({ type: () => sub, optional: isOptional })(FilterQueryObjectClass.prototype, propertyKey)
       }
+    } else if (propertyMetadata?.kind === 'composite' && propertyMetadata?.type) {
+      const compositeType = propertyMetadata.type() as Class<any>
+
+      if (ModelRegister.isModel(compositeType) && !visited.has(compositeType)) {
+        // @Composite + @Model 类型 → 递归展开为嵌套 filter 对象
+        const sub = createFilterQueryObjectClassRef(compositeType, visited)
+        Composite({ type: () => sub, optional: isOptional })(FilterQueryObjectClass.prototype, propertyKey)
+        if (!isOptional) {
+          HasAnyKey(
+            getFilterQueryOperators(classRef, propertyKey) || getPropertyOperators(classRef, propertyKey),
+          )(FilterQueryObjectClass.prototype, propertyKey)
+        }
+      } else {
+        // 非 @Model 类型 → 回退标量操作符
+        const propertyClass = createFilterQueryPropertyClassRef(classRef, propertyKey)
+        Composite({ type: () => propertyClass, optional: isOptional })(FilterQueryObjectClass.prototype, propertyKey)
+        if (!isOptional) {
+          HasAnyKey(getPropertyOperators(classRef, propertyKey))(FilterQueryObjectClass.prototype, propertyKey)
+        }
+      }
     } else {
       // eq, ne, lt, gt, lte, gte, in, nin
       const propertyClass = createFilterQueryPropertyClassRef(classRef, propertyKey)
@@ -178,7 +198,7 @@ export function FilterQueryType<T>(classRef: Class<T>): Class<IFilterQuery<T>> {
   const isRequired = R.any((p) => !p.optional, properties)
 
   class FilterQueryClass {
-    filter!: IFilterQueryObject<T>
+    filter!: IObjectOperator<T>
   }
 
   ModelRegister.addModel(FilterQueryObjectClass)
@@ -188,5 +208,5 @@ export function FilterQueryType<T>(classRef: Class<T>): Class<IFilterQuery<T>> {
     schema: getFilterQuerySchema(classRef),
   })(FilterQueryClass.prototype, 'filter')
 
-  return FilterQueryClass as Class<IFilterQuery<T>>
+  return FilterQueryClass
 }
