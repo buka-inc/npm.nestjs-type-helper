@@ -1,4 +1,4 @@
-import { Ref } from '@mikro-orm/core'
+import { Collection, Primary, type Ref } from '@mikro-orm/core'
 import { Relation } from './relation'
 
 
@@ -24,9 +24,22 @@ export type IFilterQueryNestedProperty<T> = T extends Array<infer U>
   ? IFilterQueryCollectionCondition<U>
   : IFilterQueryObject<T>
 
+/**
+ * MikroORM Collection 类型检测
+ *
+ * 注意：必须使用 `Collection<any>` 而非 `Collection<infer U>`，参考 `EntityDtoType` 的实现。
+ * `Collection` 含有两个泛型参数（`T`、`O`），`infer U` 在条件类型中可能因 TypeScript
+ * 泛型推断限制而匹配失败。
+ */
+type IsCollection<T> = T extends Collection<any> ? true : false
+
 export type IFilterQueryProperty<T> = T extends Relation
   ? IFilterQueryNestedProperty<T>
-  : IFilterQueryCondition<T>
+  : IsCollection<T> extends true
+    ? IFilterQueryCollectionCondition<T extends Collection<infer U> ? U : never>
+    : T extends Ref<infer U>
+      ? IFilterQueryCondition<Primary<U>>
+      : IFilterQueryCondition<T>
 
 
 export type IFilterQueryObject<T> = {

@@ -1,2 +1,2 @@
 export * from './filter-query'
-// export * from './relation'
+export * from './relation'
