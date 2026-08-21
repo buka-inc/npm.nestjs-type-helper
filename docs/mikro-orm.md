@@ -279,7 +279,9 @@ export class BookEntity extends DiscreteEntity {
 ```typescript
 @Entity()
 export class AuthorEntity extends DiscreteEntity {
-  @Cardinality.OneToMany(() => BookEntity, (book) => book.author, {
+  @Cardinality.OneToMany({
+    entity: () => BookEntity,
+    mappedBy: 'author',
     comment: '作品列表',
   })
   books = new Collection<BookEntity>(this)

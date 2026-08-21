@@ -154,7 +154,7 @@ export class MyService {
   constructor(private readonly openbao: OpenBaoHttpClient) {}
 
   async readSecret(path: string) {
-    return this.openbao.kvRead({ path })
+    return this.openbao.kvReadDataPath({ path })
   }
 }
 ```
