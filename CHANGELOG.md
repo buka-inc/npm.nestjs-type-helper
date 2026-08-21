@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.5.0](https://github.com/buka-ltd/npm.nestjs-kit/compare/v4.4.13...v4.5.0) (2026-08-21)
+
+
+### Features
+
+* add skills ([dc7213a](https://github.com/buka-ltd/npm.nestjs-kit/commit/dc7213af706ccb85ee3285ef4723ec5bc0347f7e))
+
 ## [4.4.13](https://github.com/buka-ltd/npm.nestjs-kit/compare/v4.4.12...v4.4.13) (2026-08-09)
 
 
